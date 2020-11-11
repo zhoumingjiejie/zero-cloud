@@ -24,7 +24,10 @@
     </properties>
 
     <modules>
+        <module>zero-config</module>
+        <module>zero-config/zero-config-bootstrap</module>
         <module>zero-eureka</module>
+        <module>zero-gateway</module>
     </modules>
 
     <dependencyManagement>

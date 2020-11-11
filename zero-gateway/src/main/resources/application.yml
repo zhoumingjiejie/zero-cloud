@@ -1,0 +1,31 @@
+server:
+  port: 10002
+
+spring:
+  application:
+    name: zero-gateway
+
+#暴露端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+#熔断配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            #设置网关中路由转发请求的HystrixCommand执行超时时间
+            timeoutInMilliseconds: 8000
+
+# 打印网关日志信息
+logging:
+  level:
+    org.springframework.cloud.gateway: debug

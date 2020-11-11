@@ -7,23 +7,32 @@
         <artifactId>zero-cloud</artifactId>
         <version>0.0.1</version>
     </parent>
-    <artifactId>zero-eureka</artifactId>
+    <artifactId>zero-gateway</artifactId>
     <version>0.0.1</version>
-    <name>zero-eureka</name>
-    <description>注册中心</description>
+    <name>zero-gateway</name>
+    <description>网关</description>
 
     <dependencies>
-        <!--注册中心配置-->
+
+        <!--gateway-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
+
+        <!--actuator：执行器-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!--注册中心-->
         <dependency>
             <groupId>com.github.icezerocat</groupId>
             <artifactId>zero-config-bootstrap</artifactId>
             <version>0.0.1</version>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -32,12 +41,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.github.icezerocat.zeroeureka.ZeroEurekaApplication</mainClass>
+                    <mainClass>com.github.icezerocat.zerogateway.ZeroGatewayApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <!--可以把依赖的包都打包到生成的Jar包中-->
                             <goal>repackage</goal>
                         </goals>
                     </execution>

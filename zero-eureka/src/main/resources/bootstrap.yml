@@ -1,3 +1,13 @@
 spring:
   profiles:
     include: config
+
+eureka:
+  client:
+    #否从eureka服务器获取注册信息
+    fetch-registry: false
+    #是否注册到eureka-server
+    register-with-eureka: false
+  server:
+    #服务注册中心的配置内容，指定服务注册中心的位置
+    enable-self-preservation: false

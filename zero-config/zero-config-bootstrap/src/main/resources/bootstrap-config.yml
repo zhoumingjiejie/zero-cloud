@@ -1,0 +1,18 @@
+eureka:
+  instance:
+    #配置与此实例相关联的主机名，是其他实例可以用来进行请求的准确名称
+    hostname: ${spring.cloud.client.ip-address}
+    #使用 ip 代替实例名
+    prefer-ip-address: true
+    #获取服务的ip和端口
+    instanceId: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10001/zero-eureka/eureka/
+
+spring:
+  #使用默认RibbonLoadBalancerClient
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
