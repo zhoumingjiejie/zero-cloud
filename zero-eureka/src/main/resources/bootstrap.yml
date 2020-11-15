@@ -1,6 +1,8 @@
 spring:
   profiles:
     include: config
+  application:
+    name: zero-eureka
 
 eureka:
   client:
@@ -9,5 +11,7 @@ eureka:
     #是否注册到eureka-server
     register-with-eureka: false
   server:
-    #服务注册中心的配置内容，指定服务注册中心的位置
+    #测试时关闭自我保护机制，保证不可用服务及时踢出
     enable-self-preservation: false
+    #每隔2秒检查一次
+    eviction-interval-timer-in-ms: 2000

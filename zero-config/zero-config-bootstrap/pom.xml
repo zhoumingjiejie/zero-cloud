@@ -7,6 +7,7 @@
         <artifactId>zero-config</artifactId>
         <version>0.0.1</version>
     </parent>
+    <groupId>com.github.icezerocat.config</groupId>
     <artifactId>zero-config-bootstrap</artifactId>
     <version>0.0.1</version>
     <name>zero-config-bootstrap</name>

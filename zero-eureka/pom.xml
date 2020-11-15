@@ -20,9 +20,8 @@
         </dependency>
         <!--注册中心-->
         <dependency>
-            <groupId>com.github.icezerocat</groupId>
+            <groupId>com.github.icezerocat.config</groupId>
             <artifactId>zero-config-bootstrap</artifactId>
-            <version>0.0.1</version>
         </dependency>
     </dependencies>
 

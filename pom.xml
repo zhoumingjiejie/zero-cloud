@@ -21,17 +21,28 @@
         <java.version>1.8</java.version>
 
         <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <swagger-spring-boot-starter.version>1.9.1.RELEASE</swagger-spring-boot-starter.version>
+        <zero-config-bootstrap.versioin>0.0.1</zero-config-bootstrap.versioin>
+        <zero-config-db.versioin>0.0.1</zero-config-db.versioin>
+        <zero-core.version>0.0.1</zero-core.version>
+        <zero-common.version>0.0.1</zero-common.version>
+        <zero-openfeign.verison>0.0.1</zero-openfeign.verison>
     </properties>
 
     <modules>
         <module>zero-config</module>
-        <module>zero-config/zero-config-bootstrap</module>
         <module>zero-eureka</module>
         <module>zero-gateway</module>
+        <module>zero-client</module>
+        <module>zero-core</module>
+        <module>zero-ap</module>
+        <module>zero-openfeign</module>
+        <module>zero-common</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <!--spring-cloud-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -39,6 +50,48 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--swagger-->
+            <dependency>
+                <groupId>com.spring4all</groupId>
+                <artifactId>swagger-spring-boot-starter</artifactId>
+                <version>${swagger-spring-boot-starter.version}</version>
+            </dependency>
+
+            <!--config-->
+            <dependency>
+                <groupId>com.github.icezerocat.config</groupId>
+                <artifactId>zero-config-bootstrap</artifactId>
+                <version>${zero-config-bootstrap.versioin}</version>
+            </dependency>
+
+            <!--db-->
+            <dependency>
+                <groupId>com.github.icezerocat.config</groupId>
+                <artifactId>zero-config-db</artifactId>
+                <version>${zero-config-db.versioin}</version>
+            </dependency>
+
+            <!--core-->
+            <dependency>
+                <groupId>com.github.icezerocat</groupId>
+                <artifactId>zero-core</artifactId>
+                <version>${zero-core.version}</version>
+            </dependency>
+
+            <!--common-->
+            <dependency>
+                <groupId>com.github.icezerocat</groupId>
+                <artifactId>zero-common</artifactId>
+                <version>${zero-common.version}</version>
+            </dependency>
+
+            <!--openfeign-->
+            <dependency>
+                <groupId>com.github.icezerocat</groupId>
+                <artifactId>zero-openfeign</artifactId>
+                <version>${zero-openfeign.verison}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

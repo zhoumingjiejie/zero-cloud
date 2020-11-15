@@ -1,0 +1,12 @@
+server:
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    include: db,redis
+
+#feigen 日志级别
+logging:
+  level:
+    com.github.icezerocat.zeroopenfeign.gateway.service.GatewayRouteService: debug

@@ -13,4 +13,9 @@
     <description>配置模块</description>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>zero-config-bootstrap</module>
+        <module>zero-config-db</module>
+    </modules>
+
 </project>

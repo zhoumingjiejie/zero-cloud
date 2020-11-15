@@ -1,9 +1,14 @@
-server:
-  port: 10002
-
 spring:
-  application:
-    name: zero-gateway
+  cloud:
+    gateway:
+      routes:
+        # 路由id
+        - id: zero-client #主题导税服务
+          # 路由的服务地址
+          uri: lb://zero-client
+          # 断言 Path: 配置路由映射路径
+          predicates:
+            - Path=/zero-client/**
 
 #暴露端点
 management:

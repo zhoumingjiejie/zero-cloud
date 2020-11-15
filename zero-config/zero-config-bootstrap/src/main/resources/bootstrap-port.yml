@@ -1,0 +1,12 @@
+spring:
+  application:
+    #端口路径
+    port-path: spring.application.port.${spring.application.name:}
+    #模块端口，格式：[模块应用名字]: [端口]
+    port:
+      zero-eureka: 10001
+      zero-gateway: 10002
+      zero-client: 10003
+      zero-clinet2: 10004
+      zero-ap: 10005
+      zero-config-gateway: 10006

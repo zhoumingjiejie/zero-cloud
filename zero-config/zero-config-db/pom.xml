@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.icezerocat</groupId>
+        <artifactId>zero-config</artifactId>
+        <version>0.0.1</version>
+    </parent>
+    <groupId>com.github.icezerocat.config</groupId>
+    <artifactId>zero-config-db</artifactId>
+    <version>0.0.1</version>
+    <name>zero-config-db</name>
+    <description>db数据库连接</description>
+
+    <properties>
+        <druid.version>1.1.22</druid.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- Druid Pool -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+        <!--mybatis-->
+        <dependency>
+            <groupId>com.github.ice-zero-cat</groupId>
+            <artifactId>icezerocat-mybatismp</artifactId>
+            <version>0.0.3</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

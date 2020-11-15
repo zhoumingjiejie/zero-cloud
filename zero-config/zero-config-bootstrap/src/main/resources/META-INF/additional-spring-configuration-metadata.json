@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "spring.application.port-path",
+      "type": "java.lang.String",
+      "description": "动态端口路径"
+    },
+    {
+      "name": "spring.application.port.zero-ap",
+      "type": "java.lang.String",
+      "description": "zero-ap服务端口"
+    }
+  ] }

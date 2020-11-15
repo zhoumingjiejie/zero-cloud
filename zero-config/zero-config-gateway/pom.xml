@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.icezerocat</groupId>
+        <artifactId>zero-config</artifactId>
+        <version>0.0.1</version>
+    </parent>
+    <groupId>com.github.icezerocat.config</groupId>
+    <artifactId>zero-config-gateway</artifactId>
+    <version>0.0.1</version>
+    <name>zero-config-gateway</name>
+    <description>网关路由配置</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.icezerocat.config</groupId>
+            <artifactId>zero-config-bootstrap</artifactId>
+        </dependency>
+
+        <!--thymeleaf-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!--核心组件（包含redis）-->
+        <dependency>
+            <groupId>com.github.icezerocat</groupId>
+            <artifactId>zero-core</artifactId>
+        </dependency>
+
+        <!--db数据库连接-->
+        <dependency>
+            <groupId>com.github.icezerocat.config</groupId>
+            <artifactId>zero-config-db</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--openfeign-->
+        <dependency>
+            <groupId>com.github.icezerocat</groupId>
+            <artifactId>zero-openfeign</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.github.icezerocat.config.zeroconfiggateway</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

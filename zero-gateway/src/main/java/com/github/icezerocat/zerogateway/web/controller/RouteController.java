@@ -1,12 +1,15 @@
 package com.github.icezerocat.zerogateway.web.controller;
 
-import com.github.icezerocat.zerogateway.definition.GatewayRouteDefinition;
-import com.github.icezerocat.zerogateway.service.DynamicRouteServiceImpl;
+import com.github.icezerocat.zerocommon.http.HttpResult;
+import com.github.icezerocat.zerogateway.dto.GatewayRouteDefinition;
+import com.github.icezerocat.zerogateway.service.DynamicRouteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * Description: 路由控制器
@@ -20,9 +23,9 @@ import reactor.core.publisher.Mono;
 @RequestMapping("route")
 public class RouteController {
 
-    private final DynamicRouteServiceImpl dynamicRouteService;
+    private final DynamicRouteService dynamicRouteService;
 
-    public RouteController(DynamicRouteServiceImpl dynamicRouteService) {
+    public RouteController(DynamicRouteService dynamicRouteService) {
         this.dynamicRouteService = dynamicRouteService;
     }
 
@@ -73,5 +76,21 @@ public class RouteController {
     public String update(@RequestBody GatewayRouteDefinition gatewayRouteDefinition) {
         RouteDefinition definition = this.dynamicRouteService.assembleRouteDefinition(gatewayRouteDefinition);
         return this.dynamicRouteService.update(definition);
+    }
+
+    /**
+     * 更新路由
+     *
+     * @param gatewayRouteDefinitionList 路由模型列表
+     * @return 更新结果
+     */
+    @PostMapping("/updateList")
+    public HttpResult<String> updateList(@RequestBody List<GatewayRouteDefinition> gatewayRouteDefinitionList) {
+        return HttpResult.ok(this.dynamicRouteService.update(gatewayRouteDefinitionList));
+    }
+
+    @PostMapping("say")
+    public HttpResult<String> say() {
+        return HttpResult.ok();
     }
 }

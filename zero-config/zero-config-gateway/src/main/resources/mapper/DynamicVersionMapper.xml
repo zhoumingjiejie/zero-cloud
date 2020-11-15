@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.icezerocat.config.zeroconfiggateway.mapper.DynamicVersionMapper">
+    <select id="getLastVersion" resultType="java.lang.Long">
+        select max(id)
+        from dynamic_version
+    </select>
+</mapper>
