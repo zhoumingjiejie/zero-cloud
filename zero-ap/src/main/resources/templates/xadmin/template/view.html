@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="layuiLayout :: htmlhead"><title></title>
+</head>
+
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a><cite id="title"></cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <!--搜索-->
+                <div id="searchForm"></div>
+                <!--表单-->
+                <div class="layui-card-body ">
+                    <table id="tableData" lay-filter="tableData"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<!--工具栏按钮-->
+<script type="text/html" id="toolbar"></script>
+
+<!--搜索栏-->
+<script id="searchHtml" type="text/html">
+    <div class="layui-card-body ">
+        <form class="layui-form layui-col-space5">
+            {{# layui.each(d, function(index, item){ }}
+
+            {{# if (item.title){ }}
+            <!--标题-->
+            <div class="layui-inline layui-show-xs-block">{{item.title + '：'}}</div>
+            {{# } }}
+
+            {{# if (item.option == null){ }}
+            <!--input输入框-->
+            <div class="layui-inline layui-show-xs-block">
+                <input class="layui-input" autocomplete="{{item.autocomplete}}" type="{{item.type}}"
+                       lay-verify="{{item.layVerify}}"
+                       placeholder="{{item.placeholder}}" name="{{item.name}}" id="{{item.searchId}}"/>
+            </div>
+            {{# } }}
+
+            {{# if (item.option != null){ }}
+            <!--下拉框-->
+            <div class="layui-inline layui-show-xs-block">
+                <select name="{{item.name}}" id="{{item.id}}" lay-verify="{{item.layVerify}}">
+                    {{# layui.each(item.options, function(index, option){ }}
+                    <option value="{{option.value}}">{{option.name}}</option>
+                    {{# }) }}
+                </select>
+            </div>
+            {{# } }}
+
+            {{# }) }}
+            <!--搜索-->
+            <div class="layui-inline layui-show-xs-block">
+                <button class="layui-btn" lay-submit="" lay-filter="search">
+                    <i class="layui-icon">&#xe615;</i></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+</html>

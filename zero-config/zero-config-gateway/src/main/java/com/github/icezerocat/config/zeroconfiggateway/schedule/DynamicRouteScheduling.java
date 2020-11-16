@@ -3,7 +3,7 @@ package com.github.icezerocat.config.zeroconfiggateway.schedule;
 import com.github.icezerocat.config.zeroconfiggateway.service.RoutesService;
 import com.github.icezerocat.zerocommon.http.HttpResult;
 import com.github.icezerocat.zerocommon.http.HttpStatus;
-import com.github.icezerocat.zerocore.config.AsyncConfig;
+import com.github.icezerocat.zerocore.constants.AsyncPool;
 import com.github.icezerocat.zerocore.constants.RedisKey;
 import com.github.icezerocat.zerocore.utils.RedisUtil;
 import com.github.icezerocat.zeroopenfeign.gateway.model.GatewayRouteDefinition;
@@ -40,7 +40,7 @@ public class DynamicRouteScheduling {
     /**
      * 异步-每60秒中执行一次,如果版本号不相等则获取最新路由信息并更新网关路由
      */
-    @Async(AsyncConfig.POOL_SCHEDULE)
+    @Async(AsyncPool.POOL_SCHEDULE)
     @Scheduled(cron = "*/60 * * * * ?")
     public void updateDynamicRouteInfo() {
         Set<String> routeId = new HashSet<>();

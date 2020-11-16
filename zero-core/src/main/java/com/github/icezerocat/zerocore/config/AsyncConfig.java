@@ -1,5 +1,6 @@
 package com.github.icezerocat.zerocore.config;
 
+import com.github.icezerocat.zerocore.constants.AsyncPool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +24,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 public class AsyncConfig implements AsyncConfigurer {
 
-    public static final String POOL_SCHEDULE = "schedulePool";
-
     @Value("${async.corePoolSize:5}")
     private int corePoolSize;
     @Value("${async.maxPoolSize:10}")
@@ -34,7 +33,7 @@ public class AsyncConfig implements AsyncConfigurer {
     @Value("${async.keepAliveSeconds:60}")
     private int keepAliveSeconds;
 
-    @Bean(name = POOL_SCHEDULE)
+    @Bean(name = AsyncPool.POOL_SCHEDULE)
     public Executor schedulePool() {
         return initExecutor("scheduleThread-");
     }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="layui :: htmlhead"><title></title>
+</head>
+<body class="index">
+<div class="layui-tab-content">
+    <div style="display: none">
+        <!--/*@thymesVar id="data" type="template"*/-->
+        <p id="data" th:text="${data}"></p>
+    </div>
+    <div class="layui-tab-item layui-show">
+        <iframe id="view" src="view?name=view&amp;path=xadmin/template" frameborder="0" scrolling="yes"
+                class="x-iframe" width="100%"></iframe>
+    </div>
+</div>
+</body>
+
+<script>
+    //<![CDATA[
+    layui.use(['view'], function () {
+        apView = layui.view;
+    });
+    iframeAuto("view");
+    //]]>
+</script>
+
+</html>
