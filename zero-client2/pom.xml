@@ -7,9 +7,9 @@
         <artifactId>zero-cloud</artifactId>
         <version>0.0.1</version>
     </parent>
-    <artifactId>zero-clinet2</artifactId>
+    <artifactId>zero-client2</artifactId>
     <version>0.0.1</version>
-    <name>zero-clinet2</name>
+    <name>zero-client2</name>
     <description>客户端2</description>
 
     <dependencies>
@@ -39,7 +39,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.github.icezerocat.zeroclinet2.ZeroClinet2Application</mainClass>
+                    <mainClass>com.github.icezerocat.zeroclient2.ZeroClient2Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

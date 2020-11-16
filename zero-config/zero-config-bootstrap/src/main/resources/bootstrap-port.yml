@@ -7,6 +7,6 @@ spring:
       zero-eureka: 10001
       zero-gateway: 10002
       zero-client: 10003
-      zero-clinet2: 10004
+      zero-client2: 10004
       zero-ap: 10005
       zero-config-gateway: 10006

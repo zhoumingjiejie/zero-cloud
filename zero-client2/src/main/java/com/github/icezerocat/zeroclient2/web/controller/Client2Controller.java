@@ -1,4 +1,4 @@
-package com.github.icezerocat.zeroclinet2.web.controller;
+package com.github.icezerocat.zeroclient2.web.controller;
 
 import github.com.icezerocat.core.http.HttpResult;
 import github.com.icezerocat.core.utils.DateUtil;
