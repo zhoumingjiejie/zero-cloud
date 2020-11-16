@@ -470,6 +470,17 @@ public class RedisUtil {
     }
 
     /**
+     * 获取所有的list
+     *
+     * @param key key
+     * @param <T> 对象
+     * @return 所有的list
+     */
+    public <T> List<T> lGetAll(String key) {
+        return this.lGet(key, 0, -1);
+    }
+
+    /**
      * 获取list缓存的长度
      *
      * @param key 键
