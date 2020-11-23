@@ -10,3 +10,4 @@ spring:
       zero-client2: 10004
       zero-ap: 10005
       zero-config-gateway: 10006
+      zero-task: 10007

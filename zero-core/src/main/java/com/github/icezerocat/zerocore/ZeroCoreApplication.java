@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author 0.0.0
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.github.icezerocat")
 public class ZeroCoreApplication {
 
     public static void main(String[] args) {

@@ -12,4 +12,24 @@
     <name>zero-common</name>
     <description>工具类通用模块</description>
 
+    <properties>
+        <commons-lang3.version>3.11</commons-lang3.version>
+        <reflections.version>0.9.12</reflections.version>
+    </properties>
+
+    <dependencies>
+        <!--lang3-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <!--reflections-->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
+        </dependency>
+    </dependencies>
 </project>

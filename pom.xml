@@ -38,6 +38,7 @@
         <module>zero-ap</module>
         <module>zero-openfeign</module>
         <module>zero-common</module>
+        <module>zero-task</module>
     </modules>
 
     <dependencyManagement>

@@ -1,0 +1,10 @@
+server:
+  port: 10007
+  servlet:
+    context-path: /@project.artifactId@
+
+spring:
+  application:
+    name: @project.artifactId@
+  profiles:
+    include: redis
