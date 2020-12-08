@@ -88,9 +88,4 @@ public class RouteController {
     public HttpResult<String> updateList(@RequestBody List<GatewayRouteDefinition> gatewayRouteDefinitionList) {
         return HttpResult.ok(this.dynamicRouteService.update(gatewayRouteDefinitionList));
     }
-
-    @PostMapping("say")
-    public HttpResult<String> say() {
-        return HttpResult.ok();
-    }
 }

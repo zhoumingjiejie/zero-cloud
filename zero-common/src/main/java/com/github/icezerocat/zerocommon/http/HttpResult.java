@@ -17,14 +17,14 @@ import java.io.Serializable;
 public class HttpResult<T> implements Serializable {
 
     final private Integer code;
-    final private String msg;
+    final private String message;
     final private T data;
     final private Long count;
     final private HttpStatus httpStatus;
 
     private HttpResult(Build<T> build) {
         this.code = build.code;
-        this.msg = build.msg;
+        this.message = build.message;
         this.data = build.data;
         this.count = build.count;
         this.httpStatus = build.httpStatus;
@@ -32,7 +32,7 @@ public class HttpResult<T> implements Serializable {
 
     public static class Build<T> {
         private Integer code;
-        private String msg;
+        private String message;
         private T data;
         private Long count;
         private HttpStatus httpStatus;
@@ -55,11 +55,11 @@ public class HttpResult<T> implements Serializable {
         /**
          * 设置信息
          *
-         * @param msg msg
+         * @param message msg
          * @return build
          */
-        public Build<T> setMsg(String msg) {
-            this.msg = msg;
+        public Build<T> setMessage(String message) {
+            this.message = message;
             return this;
         }
 
@@ -96,8 +96,8 @@ public class HttpResult<T> implements Serializable {
             if (StringUtils.isEmpty(this.code)) {
                 this.code = httpStatus.value();
             }
-            if (StringUtils.isEmpty(this.msg)) {
-                this.msg = httpStatus.getReasonPhrase();
+            if (StringUtils.isEmpty(this.message)) {
+                this.message = httpStatus.getReasonPhrase();
             }
             return this;
         }
@@ -113,19 +113,19 @@ public class HttpResult<T> implements Serializable {
     }
 
     public static <T> HttpResult<T> error() {
-        return HttpResult.Build.<T>getInstance().setCode(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMsg("未知异常，请联系管理员").complete();
+        return HttpResult.Build.<T>getInstance().setCode(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage("未知异常，请联系管理员").complete();
     }
 
     public static <T> HttpResult<T> error(String msg) {
-        return HttpResult.Build.<T>getInstance().setCode(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMsg(msg).complete();
+        return HttpResult.Build.<T>getInstance().setCode(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage(msg).complete();
     }
 
     private static <T> HttpResult<T> error(Integer code, String msg) {
-        return HttpResult.Build.<T>getInstance().setCode(code).setMsg(msg).complete();
+        return HttpResult.Build.<T>getInstance().setCode(code).setMessage(msg).complete();
     }
 
     public static <T> HttpResult<T> ok(String msg) {
-        return HttpResult.Build.<T>getInstance().setCode(HttpStatus.OK.value()).setMsg(msg).complete();
+        return HttpResult.Build.<T>getInstance().setCode(HttpStatus.OK.value()).setMessage(msg).complete();
     }
 
     public static <T> HttpResult<T> ok(T data) {

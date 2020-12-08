@@ -1,6 +1,6 @@
 package com.github.icezerocat.task.schedule.utils;
 
-import com.github.icezerocat.zerocore.config.ApplicationContextHelper;
+import com.github.icezerocat.zerocore.config.ApplicationContextZeroHelper;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 
@@ -29,7 +29,7 @@ public class ScheduleUtil {
      * @param corn     执行时间表达式
      */
     public static boolean start(Runnable runnable, String corn) {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = ApplicationContextHelper.getBean(ThreadPoolTaskScheduler.class);
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = ApplicationContextZeroHelper.getBean(ThreadPoolTaskScheduler.class);
         ScheduledFuture<?> scheduledFuture = threadPoolTaskScheduler
                 .schedule(runnable, new CronTrigger(corn));
         scheduledFutureMap.put(runnable.getClass().getName(), scheduledFuture);
@@ -44,7 +44,7 @@ public class ScheduleUtil {
      * @param zone     地区
      */
     public static boolean start(Runnable runnable, String corn, String zone) {
-        ThreadPoolTaskScheduler threadPoolTaskScheduler = ApplicationContextHelper.getBean(ThreadPoolTaskScheduler.class);
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = ApplicationContextZeroHelper.getBean(ThreadPoolTaskScheduler.class);
         ScheduledFuture<?> scheduledFuture = threadPoolTaskScheduler
                 .schedule(runnable, new CronTrigger(corn, TimeZone.getTimeZone(zone)));
         scheduledFutureMap.put(runnable.getClass().getName(), scheduledFuture);

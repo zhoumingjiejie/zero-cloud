@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -34,6 +35,7 @@
         <module>zero-eureka</module>
         <module>zero-gateway</module>
         <module>zero-client</module>
+        <module>zero-client2</module>
         <module>zero-core</module>
         <module>zero-ap</module>
         <module>zero-openfeign</module>

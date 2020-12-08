@@ -7,7 +7,7 @@ import com.github.icezerocat.zerocore.constants.AsyncPool;
 import com.github.icezerocat.zerocore.constants.RedisKey;
 import com.github.icezerocat.zerocore.utils.RedisUtil;
 import com.github.icezerocat.zeroopenfeign.gateway.model.GatewayRouteDefinition;
-import com.github.icezerocat.zeroopenfeign.gateway.service.GatewayRouteService;
+import com.github.icezerocat.zeroopenfeign.gateway.service.GatewayRouteFeignService;
 import com.google.common.primitives.Ints;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class DynamicRouteScheduling {
 
     private static int versionId = 0;
     private final RoutesService routesService;
-    private final GatewayRouteService gatewayRouteService;
+    private final GatewayRouteFeignService gatewayRouteFeignService;
 
     /**
      * 异步-每60秒中执行一次,如果版本号不相等则获取最新路由信息并更新网关路由
@@ -89,10 +89,10 @@ public class DynamicRouteScheduling {
         build.setData(String.valueOf(list));
         //调用网关服务更新路由
         if (!CollectionUtils.isEmpty(list)) {
-            HttpResult<String> result = this.gatewayRouteService.updateList(list);
+            HttpResult<String> result = this.gatewayRouteFeignService.updateList(list);
             log.info("更新路由结果：{}", result);
-            if (!"success".equalsIgnoreCase(result.getMsg())) {
-                build.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR).setMsg(result.getData());
+            if (!"success".equalsIgnoreCase(result.getMessage())) {
+                build.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR).setMessage(result.getData());
             }
         }
         return build.complete();

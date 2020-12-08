@@ -2,7 +2,7 @@ package com.github.icezerocat.task.schedule.web.controller;
 
 import com.github.icezerocat.task.schedule.thread.ScheduleTask;
 import com.github.icezerocat.task.schedule.utils.ScheduleUtil;
-import com.github.icezerocat.zerocore.config.ApplicationContextHelper;
+import com.github.icezerocat.zerocore.config.ApplicationContextZeroHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +28,7 @@ public class ScheduleController {
     @PostMapping("saveOrUpdate")
     public boolean saveOrUpdate(String beanName, String corn, @RequestParam(required = false) String zone) {
         boolean resultBl;
-        ScheduleTask scheduleTask = ApplicationContextHelper.getBean(beanName, ScheduleTask.class);
+        ScheduleTask scheduleTask = ApplicationContextZeroHelper.getBean(beanName, ScheduleTask.class);
         if (StringUtils.isNotBlank(zone)) {
             resultBl = ScheduleUtil.reset(scheduleTask, corn, zone);
         } else {
@@ -45,6 +45,6 @@ public class ScheduleController {
      */
     @DeleteMapping("cancel")
     public boolean cancel(String beanName) {
-        return ScheduleUtil.cancel(ApplicationContextHelper.getBean(beanName, ScheduleTask.class));
+        return ScheduleUtil.cancel(ApplicationContextZeroHelper.getBean(beanName, ScheduleTask.class));
     }
 }

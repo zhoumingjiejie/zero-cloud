@@ -1,6 +1,6 @@
 package com.github.icezerocat.zerocore.utils;
 
-import com.github.icezerocat.zerocore.config.ApplicationContextHelper;
+import com.github.icezerocat.zerocore.config.ApplicationContextZeroHelper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
@@ -31,7 +31,7 @@ public class RedisUtil {
             synchronized (RedisUtil.class) {
                 if (redisUtil == null) {
                     RedisUtil.redisUtil = new RedisUtil();
-                    RedisUtil.redisTemplate = ApplicationContextHelper.getTBean("redisTemplate");
+                    RedisUtil.redisTemplate = ApplicationContextZeroHelper.getTBean("redisTemplate");
                 }
             }
         }

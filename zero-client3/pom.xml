@@ -7,10 +7,10 @@
         <artifactId>zero-cloud</artifactId>
         <version>0.0.1</version>
     </parent>
-    <artifactId>zero-client2</artifactId>
+    <artifactId>zero-client3</artifactId>
     <version>0.0.1</version>
-    <name>zero-client2</name>
-    <description>客户端2</description>
+    <name>zero-client3</name>
+    <description>重建client2</description>
 
     <properties>
         <zero-openfeign.verison>0.0.1</zero-openfeign.verison>
@@ -23,18 +23,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-        <groupId>com.github.icezerocat.config</groupId>
-        <artifactId>zero-config-bootstrap</artifactId>
-    </dependency>
+            <groupId>com.github.icezerocat.config</groupId>
+            <artifactId>zero-config-bootstrap</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.github.icezerocat.config</groupId>
             <artifactId>zero-config-db</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.icezerocat</groupId>
-            <artifactId>zero-task</artifactId>
-            <version>${zero-task.version}</version>
         </dependency>
 
         <!--openfeign-->
@@ -57,12 +51,14 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.github.icezerocat.zeroclient2.ZeroClient2Application</mainClass>
+                    <mainClass>com.github.icezerocat.zeroclient3.ZeroClient3Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>
+                                repackage
+                            </goal>
                         </goals>
                     </execution>
                 </executions>
@@ -70,27 +66,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <profiles.include>dev</profiles.include>
-            </properties>
-        </profile>
-        <profile>
-            <id>test</id>
-            <properties>
-                <profiles.include>test</profiles.include>
-            </properties>
-        </profile>
-        <profile>
-            <id>pro</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <profiles.include>pro</profiles.include>
-            </properties>
-        </profile>
-    </profiles>
 </project>

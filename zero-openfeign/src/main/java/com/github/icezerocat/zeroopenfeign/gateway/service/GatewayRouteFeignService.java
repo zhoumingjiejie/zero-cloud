@@ -17,7 +17,7 @@ import java.util.List;
  * @version 1.0
  */
 @FeignClient(FeignClientName.ZERO_GATEWAY)
-public interface GatewayRouteService {
+public interface GatewayRouteFeignService {
 
     /**
      * 更新路由

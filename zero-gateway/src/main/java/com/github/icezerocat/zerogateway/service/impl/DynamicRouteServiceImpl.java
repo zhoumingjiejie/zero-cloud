@@ -37,7 +37,7 @@ import java.util.List;
 @Service("dynamicRouteService")
 public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware, DynamicRouteService {
 
-    @Value("{gateway.route.urlStartsWith:http}")
+    @Value("${gateway.route.urlStartsWith:http}")
     private String startsWith;
 
     private final RouteDefinitionWriter routeDefinitionWriter;

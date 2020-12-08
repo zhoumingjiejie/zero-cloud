@@ -9,5 +9,12 @@ package com.github.icezerocat.zeroopenfeign.constant;
  */
 public interface FeignClientName {
 
+    /**
+     * 网管应用名
+     */
     String ZERO_GATEWAY = "zero-gateway";
+    /**
+     * 客户端1
+     */
+    String ZERO_CLIENT = "zero-client";
 }
