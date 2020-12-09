@@ -3,9 +3,7 @@ package com.github.icezerocat.zeroclient.web.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Date;
@@ -33,5 +31,16 @@ public class ClientController {
     @GetMapping("say")
     public String say() {
         return "hello world".concat(new Date().toString());
+    }
+
+    /**
+     * sendMessage
+     *
+     * @return result
+     */
+    @ApiOperation("sendMessage")
+    @PostMapping("sendMessage")
+    public String sendMessage(@RequestParam("message") String message) {
+        return "hello world".concat(new Date().toString()).concat(message);
     }
 }

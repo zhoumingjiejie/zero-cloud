@@ -2,8 +2,8 @@ package com.github.icezerocat.zeroclient2.service.Impl;
 
 import com.github.icezerocat.zeroclient2.constant.FeignConstant;
 import com.github.icezerocat.zeroclient2.service.FeignService;
+import com.github.icezerocat.zeroopenfeign.build.FeignBuild;
 import com.github.icezerocat.zeroopenfeign.client.service.ClientFeignService;
-import feign.Feign;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +28,12 @@ public class FeignServiceImpl implements FeignService {
     @SuppressWarnings("all")
     public FeignServiceImpl(Decoder decoder, Encoder encoder) {
         String url = FeignConstant.url;
-        this.clientFeignService = Feign.builder().decoder(decoder).encoder(encoder)
-                .target(ClientFeignService.class, url);
+        this.clientFeignService = FeignBuild.getFeignClient(ClientFeignService.class, FeignConstant.url, decoder, encoder);
     }
 
     @Override
     public String clientSay() {
-        return this.clientFeignService.say();
+        log.debug("无参数调用：{}", this.clientFeignService.say());
+        return this.clientFeignService.sendMessage(" hello world ！！！");
     }
 }

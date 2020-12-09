@@ -1,10 +1,9 @@
 package com.github.icezerocat.zeroopenfeign.client.service;
 
 import com.github.icezerocat.zeroopenfeign.constant.FeignClientName;
+import feign.Param;
 import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
-
-import java.net.URI;
 
 /**
  * Description: 客户端服务接口
@@ -25,11 +24,11 @@ public interface ClientFeignService {
     String say();
 
     /**
-     * say
+     * sendMessage
      *
-     * @param uri 请求url
+     * @param message 消息
      * @return 字符串
      */
-    @RequestLine("GET /say")
-    String say(URI uri);
+    @RequestLine("POST /sendMessage?message={message}")
+    String sendMessage(@Param("message") String message);
 }
