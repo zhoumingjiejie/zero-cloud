@@ -5,7 +5,7 @@ server:
 
 spring:
   profiles:
-    active: port
+    active: port,eureka,nacos
   #使用默认RibbonLoadBalancerClient
   cloud:
     loadbalancer:

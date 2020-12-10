@@ -2,40 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--<parent>
-        <groupId>com.github.icezerocat</groupId>
-        <artifactId>zero-config</artifactId>
-        <version>0.0.1</version>
-    </parent>-->
     <groupId>com.github.icezerocat.config</groupId>
     <artifactId>zero-config-bootstrap</artifactId>
     <version>0.0.2</version>
     <name>zero-config-bootstrap</name>
     <description>静态文件配置</description>
-
-    <dependencies>
-
-        <!-- 配置eureka客户端启动器 -->
-        <!--<dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>-->
-        <!--caffeine缓存-->
-        <!--<dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-        </dependency>-->
-
-        <!--nocas[start]-->
-        <!--<dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>-->
-        <!--nocas[end]-->
-
-    </dependencies>
 </project>

@@ -145,22 +145,21 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <registry>eureka</registry>
-            </properties>
             <dependencies>
                 <!-- 配置eureka客户端启动器 -->
                 <dependency>
                     <groupId>org.springframework.cloud</groupId>
                     <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
                 </dependency>
+                <!--caffeine缓存-->
+                <dependency>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
+                </dependency>
             </dependencies>
         </profile>
         <profile>
             <id>nacos</id>
-            <properties>
-                <registry>nacos</registry>
-            </properties>
             <dependencies>
                 <!--nocas[start]-->
                 <dependency>
