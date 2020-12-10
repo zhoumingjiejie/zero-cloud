@@ -28,7 +28,4 @@ public interface GatewayRouteFeignService {
     @PostMapping("/route/updateList")
     HttpResult<String> updateList(@RequestBody List<GatewayRouteDefinition> gatewayRouteDefinitionList);
 
-    @PostMapping("/route/say")
-    HttpResult<String> say();
-
 }
