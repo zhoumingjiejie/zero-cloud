@@ -1,5 +1,5 @@
 spring:
   profiles:
-    include: config,@registry@
+    include: config
   application:
     name: @project.artifactId@

@@ -140,6 +140,7 @@
     </dependencies>
 
     <profiles>
+        <!--默认注册中心Eureka-->
         <profile>
             <id>eureka</id>
             <activation>
@@ -171,6 +172,18 @@
                     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
                 </dependency>
                 <!--nocas[end]-->
+
+                <!--去除默认注册中心-->
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>*</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
             </dependencies>
         </profile>
     </profiles>
