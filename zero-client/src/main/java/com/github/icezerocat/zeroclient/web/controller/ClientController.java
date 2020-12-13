@@ -1,8 +1,10 @@
 package com.github.icezerocat.zeroclient.web.controller;
 
+import com.github.icezerocat.zeroopenfeign.client.service.ClientFeignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -22,6 +24,9 @@ import java.util.Date;
 @RequestMapping("client")
 public class ClientController {
 
+    @Autowired
+    private ClientFeignService clientFeignService;
+
     /**
      * say
      *
@@ -30,6 +35,7 @@ public class ClientController {
     @ApiOperation("say")
     @GetMapping("say")
     public String say() {
+        this.clientFeignService.say();
         return "hello world".concat(new Date().toString());
     }
 

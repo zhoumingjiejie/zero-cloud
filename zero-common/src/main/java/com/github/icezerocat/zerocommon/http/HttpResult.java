@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * HTTP结果封装
@@ -21,6 +22,7 @@ public class HttpResult<T> implements Serializable {
     final private T data;
     final private Long count;
     final private HttpStatus httpStatus;
+    final private Date date;
 
     private HttpResult(Build<T> build) {
         this.code = build.code;
@@ -28,6 +30,7 @@ public class HttpResult<T> implements Serializable {
         this.data = build.data;
         this.count = build.count;
         this.httpStatus = build.httpStatus;
+        this.date = build.date;
     }
 
     public static class Build<T> {
@@ -36,6 +39,7 @@ public class HttpResult<T> implements Serializable {
         private T data;
         private Long count;
         private HttpStatus httpStatus;
+        private Date date = new Date();
 
         public static <T> Build<T> getInstance() {
             return new Build<>();

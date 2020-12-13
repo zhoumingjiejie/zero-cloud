@@ -33,6 +33,7 @@ public class Client2Controller {
 
     private final BaseMpBuildService baseMpBuildService;
     private final FeignService feignService;
+    //private final ClientFeignService clientFeignService;
 
     /**
      * say
@@ -48,6 +49,16 @@ public class Client2Controller {
 
     /**
      * feign动态调用
+     *
+     * @return string
+     */
+    @GetMapping("feignLine")
+    public HttpResult<String> feignLine() {
+        return HttpResult.ok(this.feignService.clientSay());
+    }
+
+    /**
+     * feign普通调用
      *
      * @return string
      */

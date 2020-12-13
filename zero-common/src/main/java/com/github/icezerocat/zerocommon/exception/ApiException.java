@@ -1,7 +1,6 @@
 package com.github.icezerocat.zerocommon.exception;
 
-import com.github.icezerocat.zerocommon.http.HttpStatus;
-import lombok.ToString;
+import java.io.Serializable;
 
 /**
  * ProjectName: [icezero-system]
@@ -12,13 +11,45 @@ import lombok.ToString;
  * @author 0.0.0
  * @version 1.0
  */
-@ToString
 @SuppressWarnings("unused")
-public class ApiException extends RuntimeException {
+public class ApiException extends RuntimeException implements Serializable {
+
     private static final long serialVersionUID = -7230273470995591933L;
 
+    /**
+     * 时间戳
+     */
+    private Long timestamp;
+
+    /**
+     * 状态码
+     */
+    private Integer status = 500;
+
+    /**
+     * 异常
+     */
+    private String exception;
+
+    /**
+     * 异常跟踪
+     */
+    private String trace;
+
+    /**
+     * 信息
+     */
     private String message;
-    private int code = HttpStatus.INTERNAL_SERVER_ERROR.value();
+
+    /**
+     * 请求路径
+     */
+    private String path;
+
+    /**
+     * 错误（httStatus状态码对应消息）
+     */
+    private String error;
 
 
     public ApiException(String message) {
@@ -26,9 +57,9 @@ public class ApiException extends RuntimeException {
         this.message = message;
     }
 
-    public ApiException(String message, int code) {
+    public ApiException(String message, int status) {
         this.message = message;
-        this.code = code;
+        this.status = status;
     }
 
     public ApiException(String message, Throwable cause) {
@@ -36,10 +67,10 @@ public class ApiException extends RuntimeException {
         this.message = message;
     }
 
-    public ApiException(String message, Throwable cause, int code) {
+    public ApiException(String message, Throwable cause, int status) {
         super(message, cause);
         this.message = message;
-        this.code = code;
+        this.status = status;
     }
 
     @Override
@@ -51,11 +82,64 @@ public class ApiException extends RuntimeException {
         this.message = message;
     }
 
-    public int getCode() {
-        return code;
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
+    }
+
+    public String getTrace() {
+        return trace;
+    }
+
+    public void setTrace(String trace) {
+        this.trace = trace;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    @Override
+    public String toString() {
+        return "ApiException{" +
+                "timestamp=" + timestamp +
+                ", status=" + status +
+                ", exception='" + exception + '\'' +
+                ", trace='" + trace + '\'' +
+                ", message='" + message + '\'' +
+                ", path='" + path + '\'' +
+                ", error='" + error + '\'' +
+                '}';
     }
 }

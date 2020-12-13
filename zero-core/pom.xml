@@ -13,6 +13,12 @@
     <description>核心模块包含bean注入</description>
 
     <dependencies>
+        <!--web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!--    redis   -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

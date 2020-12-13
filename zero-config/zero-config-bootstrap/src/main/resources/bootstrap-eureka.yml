@@ -10,6 +10,8 @@ eureka:
     lease-renewal-interval-in-seconds: 1
     #Eureka服务端在收到最后一次心跳之后等待的时间上限，单位为秒，超过则剔除（客户端告诉服务端按照此规则等待自己）
     lease-expiration-duration-in-seconds: 2
+    #instance：appname和application：name同时配置则注册中心优先显示instance：appname
+    appname: ${spring.application.name:}
   client:
     service-url:
       defaultZone: http://127.0.0.1:10001/zero-eureka/eureka/

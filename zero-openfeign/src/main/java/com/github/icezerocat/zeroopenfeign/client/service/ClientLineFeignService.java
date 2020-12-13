@@ -1,12 +1,11 @@
 package com.github.icezerocat.zeroopenfeign.client.service;
 
+import com.github.icezerocat.zeroopenfeign.config.NotBreakerConfiguration;
 import com.github.icezerocat.zeroopenfeign.config.ClientLineServiceFallback;
-import com.github.icezerocat.zeroopenfeign.config.KeepErrMsgConfiguration;
 import com.github.icezerocat.zeroopenfeign.constant.FeignClientName;
 import feign.Param;
+import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * Description: 客户端服务接口
@@ -16,19 +15,18 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @version 1.0
  */
 @FeignClient(
-        name = FeignClientName.ZERO_CLIENT,
+        name = FeignClientName.ZERO_CLIENT_LINE,
         fallbackFactory = ClientLineServiceFallback.class,
-        configuration = KeepErrMsgConfiguration.class,
-        path = FeignClientName.ZERO_CLIENT
+        configuration = NotBreakerConfiguration.class
 )
-public interface ClientFeignService {
+public interface ClientLineFeignService {
 
     /**
      * say
      *
      * @return 字符串
      */
-    @GetMapping("/feignEx/say")
+    @RequestLine("GET /say")
     String say();
 
     /**
@@ -37,6 +35,6 @@ public interface ClientFeignService {
      * @param message 消息
      * @return 字符串
      */
-    @PostMapping("POST client/sendMessage")
+    @RequestLine("POST /sendMessage?message={message}")
     String sendMessage(@Param("message") String message);
 }

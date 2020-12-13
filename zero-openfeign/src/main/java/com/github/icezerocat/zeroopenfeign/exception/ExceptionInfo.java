@@ -13,15 +13,39 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ExceptionInfo {
+    /**
+     * 时间戳
+     */
     private Long timestamp;
 
+    /**
+     * 状态码
+     */
     private Integer status;
 
+    /**
+     * 异常
+     */
     private String exception;
 
+    /**
+     * 异常跟踪
+     */
+    private String trace;
+
+    /**
+     * 信息
+     */
     private String message;
 
+    /**
+     * 请求路径
+     */
     private String path;
 
+    /**
+     * 错误（httStatus状态码对应消息）
+     */
     private String error;
+
 }

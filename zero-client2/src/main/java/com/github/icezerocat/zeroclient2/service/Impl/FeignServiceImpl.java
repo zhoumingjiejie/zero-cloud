@@ -3,7 +3,7 @@ package com.github.icezerocat.zeroclient2.service.Impl;
 import com.github.icezerocat.zeroclient2.constant.FeignConstant;
 import com.github.icezerocat.zeroclient2.service.FeignService;
 import com.github.icezerocat.zeroopenfeign.build.FeignBuild;
-import com.github.icezerocat.zeroopenfeign.client.service.ClientFeignService;
+import com.github.icezerocat.zeroopenfeign.client.service.ClientLineFeignService;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import lombok.extern.slf4j.Slf4j;
@@ -23,17 +23,20 @@ import org.springframework.stereotype.Service;
 @Import(FeignClientsConfiguration.class)
 public class FeignServiceImpl implements FeignService {
 
-    private final ClientFeignService clientFeignService;
+    /*@Autowired
+    private ClientFeignService clientFeignService;*/
+
+    private final ClientLineFeignService clientLineFeignService;
 
     @SuppressWarnings("all")
     public FeignServiceImpl(Decoder decoder, Encoder encoder) {
         String url = FeignConstant.url;
-        this.clientFeignService = FeignBuild.getFeignClient(ClientFeignService.class, FeignConstant.url, decoder, encoder);
+        this.clientLineFeignService = FeignBuild.getFeignClient(ClientLineFeignService.class, FeignConstant.url, decoder, encoder);
     }
 
     @Override
     public String clientSay() {
-        log.debug("无参数调用：{}", this.clientFeignService.say());
-        return this.clientFeignService.sendMessage(" hello world ！！！");
+        log.debug("无参数调用：{}", this.clientLineFeignService.say());
+        return this.clientLineFeignService.sendMessage(" hello world ！！！");
     }
 }

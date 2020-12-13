@@ -1,7 +1,6 @@
 package com.github.icezerocat.zeroopenfeign.config;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.github.icezerocat.zeroopenfeign.exception.ExceptionInfo;
 import com.netflix.hystrix.exception.HystrixBadRequestException;
 import feign.Response;
@@ -29,15 +28,14 @@ public class FeignErrorDecoder implements ErrorDecoder {
             if (response.body() != null) {
                 // 这里直接拿到我们抛出的异常信息
                 String message = Util.toString(response.body().asReader());
-                log.error("FeignError:{}", message);
-                ExceptionInfo exceptionInfo = JSON.parseObject(message, new TypeReference<ExceptionInfo>() {
-                });
+                log.error("FeignErrorDecoder:{}", message);
+                ExceptionInfo exceptionInfo = JSON.parseObject(message, ExceptionInfo.class);
                 // 业务异常包装成 HystrixBadRequestException，不进入熔断逻辑
                 return new HystrixBadRequestException(exceptionInfo.getMessage());
             }
         } catch (IOException e) {
             e.printStackTrace();
-            log.error(e.getMessage());
+            log.error("FeignErrorDecoder数据处理异常：{}", e.getMessage());
             return new InternalException(e.getMessage());
         }
         return new InternalException("system error");
