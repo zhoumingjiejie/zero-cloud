@@ -1,16 +1,13 @@
 package com.github.icezerocat.zeroopenfeign.config;
 
 import com.alibaba.fastjson.JSON;
-import com.github.icezerocat.zeroopenfeign.exception.ExceptionInfo;
+import com.github.icezerocat.zerocommon.exception.ApiException;
 import com.netflix.hystrix.exception.HystrixBadRequestException;
 import feign.Response;
 import feign.Util;
 import feign.codec.ErrorDecoder;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-
-import java.io.IOException;
 
 /**
  * Description: Feign客户端发生http请求层面的错误——回调
@@ -21,24 +18,25 @@ import java.io.IOException;
  */
 @Slf4j
 @Configuration
-public class FeignErrorDecoder implements ErrorDecoder {
+public class FeignErrorGlobalDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
+        Exception exception = new ApiException("FeignErrorGlobalDecoder:Feign接口暂时不可用");
         try {
             if (response.body() != null) {
                 // 这里直接拿到我们抛出的异常信息
-                String message = Util.toString(response.body().asReader());
-                log.error("FeignErrorDecoder:{}", message);
-                ExceptionInfo exceptionInfo = JSON.parseObject(message, ExceptionInfo.class);
+                String json = Util.toString(response.body().asReader());
+                log.error("FeignErrorDecoder:{}", json);
+                ApiException exceptionInfo = JSON.parseObject(json, ApiException.class);
                 // 业务异常包装成 HystrixBadRequestException，不进入熔断逻辑
-                return new HystrixBadRequestException(exceptionInfo.getMessage());
+                if (exceptionInfo != null) {
+                    exception = new HystrixBadRequestException(json);
+                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            log.error("FeignErrorDecoder数据处理异常：{}", e.getMessage());
-            return new InternalException(e.getMessage());
+            log.error("FeignErrorDecoder数据处理异常：{}", e.getMessage(), e);
         }
-        return new InternalException("system error");
-        //return decode(methodKey, response);
+        return exception;
     }
 }

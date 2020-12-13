@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClientLineServiceFallback implements FallbackFactory<ClientLineFeignService> {
     private static final Logger LOG = LoggerFactory.getLogger(ClientLineServiceFallback.class);
-    private static final String ERR_MSG = "Test接口暂时不可用: ";
+    private static final String ERR_MSG = "Feign接口暂时不可用: ";
 
     @Override
     public ClientLineFeignService create(Throwable throwable) {

@@ -57,7 +57,7 @@ public class ExceptionRestControllerAdvice implements ResponseBodyAdvice<Object>
     @ExceptionHandler(ApiException.class)
     public HttpResult apiExceptionHandler(ApiException e) {
         e.printStackTrace();
-        return HttpResult.Build.getInstance().setCode(e.getStatus()).setMessage("响应失败").setData(e.getMessage()).complete();
+        return HttpResult.Build.getInstance().setCode(e.getCode()).setMessage("响应失败").setData(e.getMessage()).complete();
     }
 
     /**

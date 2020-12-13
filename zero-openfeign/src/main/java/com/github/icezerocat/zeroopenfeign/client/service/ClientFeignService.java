@@ -1,7 +1,6 @@
 package com.github.icezerocat.zeroopenfeign.client.service;
 
-import com.github.icezerocat.zeroopenfeign.config.ClientLineServiceFallback;
-import com.github.icezerocat.zeroopenfeign.config.KeepErrMsgConfiguration;
+import com.github.icezerocat.zeroopenfeign.config.BreakerConfiguration;
 import com.github.icezerocat.zeroopenfeign.constant.FeignClientName;
 import feign.Param;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,8 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @FeignClient(
         name = FeignClientName.ZERO_CLIENT,
-        fallbackFactory = ClientLineServiceFallback.class,
-        configuration = KeepErrMsgConfiguration.class,
+        configuration = BreakerConfiguration.class,
         path = FeignClientName.ZERO_CLIENT
 )
 public interface ClientFeignService {
