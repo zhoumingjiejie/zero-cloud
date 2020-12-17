@@ -19,9 +19,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.icezerocat.config</groupId>
+            <artifactId>zero-config-bootstrap</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.icezerocat</groupId>
             <artifactId>zero-core</artifactId>
-            <version>0.0.1</version>
         </dependency>
     </dependencies>
 
