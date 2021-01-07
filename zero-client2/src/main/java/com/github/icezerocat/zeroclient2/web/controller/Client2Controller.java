@@ -2,6 +2,7 @@ package com.github.icezerocat.zeroclient2.web.controller;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.icezerocat.zeroclient2.service.FeignService;
+import github.com.icezerocat.core.aop.Timer;
 import github.com.icezerocat.core.http.HttpResult;
 import github.com.icezerocat.core.utils.DateUtil;
 import github.com.icezerocat.mybatismp.common.mybatisplus.NoahServiceImpl;
@@ -44,6 +45,7 @@ public class Client2Controller {
     public HttpResult say() {
         NoahServiceImpl<BaseMapper<Object>, Object> dynamicVersion = this.baseMpBuildService.newInstance("dynamic_version");
         log.debug("{}", dynamicVersion.list());
+        //dynamicVersion.saveOrUpdateBatch(new ArrayList<Object>());
         return HttpResult.ok("客户端2：".concat(DateUtil.formatDateTime(new Date())));
     }
 
@@ -72,6 +74,7 @@ public class Client2Controller {
      *
      * @return value
      */
+    @Timer(description = "sayValue加注解")
     @GetMapping("sayValue")
     public HttpResult<String> sayValue() {
         log.debug("value:{}", this.themeUrl);

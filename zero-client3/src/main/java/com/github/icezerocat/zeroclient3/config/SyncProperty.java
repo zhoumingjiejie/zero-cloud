@@ -1,4 +1,4 @@
-package com.github.icezerocat.task.schedule.config;
+package com.github.icezerocat.zeroclient3.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -6,11 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Description: Schedule属性
- * CreateDate:  2020/12/17 14:35
+ * Description: 同步属性
+ * CreateDate:  2020/12/21 18:10
  *
  * @author zero
  * @version 1.0
@@ -23,11 +24,11 @@ import java.util.List;
         @PropertySource(value = "classpath:application.properties", ignoreResourceNotFound = true),
         @PropertySource(value = "classpath:application.yml", ignoreResourceNotFound = true)
 })
-@ConfigurationProperties(prefix = "schedule")
-public class ScheduleProperty {
+@ConfigurationProperties(prefix = "sync")
+public class SyncProperty {
 
     /**
-     * 扫描的包
+     * 监听的方法全名，需要处理数据的bean
      */
-    private List<String> scanBasePackages;
+    private Map<String, String> methodMapBean = new HashMap<>();
 }

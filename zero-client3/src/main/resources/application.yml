@@ -1,0 +1,15 @@
+server:
+  servlet:
+    context-path: /
+spring:
+  profiles:
+    include: db
+
+sync:
+  methodMapBean:
+    {
+      com.github.icezerocat.zeroclient3.service.impl.DynamicVersionServiceImpl.saveOrUpdateBatch:
+        'saveOrUpdateBatchExe',
+      com.github.icezerocat.zeroclient3.service.impl.DynamicVersionServiceImpl.getOne:
+        'getOneExe'
+    }

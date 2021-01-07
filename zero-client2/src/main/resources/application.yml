@@ -8,6 +8,7 @@ jdbc:
   username: root
   password: 123456
 
+#定时任务扫描包
 schedule:
   scanBasePackages:
-    - com.github.icezerocat
+    #- com.github.icezerocat
