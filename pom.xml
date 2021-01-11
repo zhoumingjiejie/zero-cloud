@@ -42,6 +42,7 @@
         <module>zero-openfeign</module>
         <module>zero-common</module>
         <module>zero-task</module>
+        <module>zero-oauth</module>
     </modules>
 
     <dependencyManagement>
