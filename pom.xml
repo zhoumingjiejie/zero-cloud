@@ -144,9 +144,9 @@
         <!--默认注册中心Eureka-->
         <profile>
             <id>eureka</id>
-            <activation>
+            <!--<activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>
+            </activation>-->
             <dependencies>
                 <!-- 配置eureka客户端启动器 -->
                 <dependency>

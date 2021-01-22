@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    include: config,db
+  application:
+    name: @project.artifactId@

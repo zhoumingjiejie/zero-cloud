@@ -1,13 +1,20 @@
 package com.github.icezerocat.oauth2.config;
 
+import com.github.icezerocat.oauth2.security.SecurityOauthAccessDecisionManager;
+import com.github.icezerocat.oauth2.security.SecurityOauthMetadataSource;
+import com.github.icezerocat.oauth2.service.SecurityOauthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 /**
  * Description: 资源服务配置
@@ -19,9 +26,11 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @Configuration
 @EnableResourceServer
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private final TokenStore tokenStore;
+    private final SecurityOauthService securityOauthService;
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
@@ -50,11 +59,30 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 //另外，如果不设置，那么在通过浏览器访问被保护的任何资源时，每次是不同的SessionID，并且将每次请求的历史都记录在OAuth2Authentication的details的中
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
+                .authorizeRequests().antMatchers("/oauth/**").permitAll()
+                .and()
                 .requestMatchers()
                 .antMatchers("/user", "/res/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/user", "/res/**")
-                .authenticated();
+                .authenticated()
+                .and().authorizeRequests()
+                // 自定义FilterInvocationSecurityMetadataSource
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(
+                            O fsi) {
+                        fsi.setSecurityMetadataSource(new SecurityOauthMetadataSource(fsi.getSecurityMetadataSource(), securityOauthService));
+                        fsi.setAccessDecisionManager(securityOauthAccessDecisionManager());
+                        return fsi;
+                    }
+                })
+        ;
+    }
+
+    @Bean
+    public SecurityOauthAccessDecisionManager securityOauthAccessDecisionManager() {
+        return new SecurityOauthAccessDecisionManager();
     }
 }

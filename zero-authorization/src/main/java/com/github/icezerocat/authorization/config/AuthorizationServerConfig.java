@@ -1,21 +1,23 @@
-package com.github.icezerocat.oauth2.config;
+package com.github.icezerocat.authorization.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.approval.ApprovalStore;
-import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 /**
  * Description: 授权服务配置
@@ -29,10 +31,28 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @RequiredArgsConstructor
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
+    /**
+     * 认证管理器
+     * {@link WebSecurityConfig#authenticationManagerBean()}
+     */
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
+    /**
+     * 用户信息服务
+     * {@link com.github.icezerocat.authorization.security.UserDetailsServiceImpl}
+     */
+    @Qualifier("userDetailsService")
     private final UserDetailsService userDetailsService;
 
+    /**
+     * 客户端信息服务
+     * {@link com.github.icezerocat.authorization.security.ClientDetailsServiceImpl}
+     */
+    private ClientDetailsService clientDetailsService;
+
+    @Autowired
+    public void setClientDetailsService(@Qualifier("clientDetailsServiceImpl") ClientDetailsService clientDetailsService) {
+        this.clientDetailsService = clientDetailsService;
+    }
 
     /**
      * 端点的安全约束
@@ -59,27 +79,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         //添加客户端信息
-        clients
-                //使用内存存储客户端信息
-                .inMemory()
-                //客户端ID
-                .withClient("client")
-                //密钥
-                .secret(this.passwordEncoder.encode("secret"))
-                //此客户端允许的授权类型：密码式：password,隐藏式：implicit,授权码：authorization_code,客户端凭证：client_credentials
-                .authorizedGrantTypes("authorization_code", "implicit", "password", "client_credentials", "refresh_token")
-                //.authorizedGrantTypes("authorization_code", "implicit", "refresh_token")
-                //权限
-                .scopes("app", "admin", "user")
-                //回调uri，在authorization_code与implicit授权方式时，用以接收服务器的返回信息
-                .redirectUris("http://www.baidu.com")
-                //登录后绕过批准询问(/oauth/confirm_access)
-                .autoApprove(true);
-
+        clients.withClientDetails(this.clientDetailsService);
     }
 
     /**
      * 配置授权以及令牌的访问端点和令牌服务，令牌发放
+     * 授权服务器的安全配置, 主要是配置 {@code oauth/token} 端点.
      *
      * @param endpoints 端点
      */
@@ -87,7 +92,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
                 .tokenStore(this.tokenStore())
-                .approvalStore(this.approvalStore())
                 .authenticationManager(this.authenticationManager)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 .userDetailsService(this.userDetailsService)
@@ -97,18 +101,26 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         ;
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-        //token保存在内存中（也可以保存在数据库、Redis中）。
-        //如果保存在中间件（数据库、Redis），那么资源服务器与认证服务器可以不在同一个工程中。
-        //注意：如果不保存access_token，则没法通过access_token取得用户信息
-        return new InMemoryTokenStore();
+    /**
+     * Description: 自定义Jwt的token
+     * {@link JwtTokenStore}
+     *
+     * @return org.springframework.security.oauth2.provider.token.TokenStore {@link JwtTokenStore}
+     */
+    private TokenStore tokenStore() {
+        return new JwtTokenStore(this.jwtAccessTokenConverter());
     }
 
-    @Bean
-    public ApprovalStore approvalStore() {
-        TokenApprovalStore store = new TokenApprovalStore();
-        store.setTokenStore(this.tokenStore());
-        return store;
+    /**
+     * Description: Jwt Token转换器
+     * 为 {@link JwtTokenStore} 所须
+     *
+     * @return org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
+     */
+    private JwtAccessTokenConverter jwtAccessTokenConverter() {
+        final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("authorization-server.jks"), "SCLiKe11040218".toCharArray());
+        final JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("authorization-server-jwt-keypair"));
+        return jwtAccessTokenConverter;
     }
 }
