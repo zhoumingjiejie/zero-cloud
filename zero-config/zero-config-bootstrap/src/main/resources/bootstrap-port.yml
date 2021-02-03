@@ -12,3 +12,6 @@ spring:
       zero-config-gateway: 10006
       zero-task: 10007
       zero-client3: 10008
+      zero-client-storage: 10009
+      zero-client-order: 10010
+      zero-client-account: 10011

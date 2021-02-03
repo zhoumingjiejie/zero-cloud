@@ -22,4 +22,19 @@ public interface FeignClientName {
      * 客户端1-RequestLine注解动态url请求
      */
     String ZERO_CLIENT_LINE = "zero-client-line";
+
+    /**
+     * account 客户端
+     */
+    String ZERO_CLIENT_ACCOUNT = "zero-client-account";
+
+    /**
+     * order 客户端
+     */
+    String ZERO_CLIENT_ORDER = "zero-client-order";
+
+    /**
+     * storage 客户端
+     */
+    String ZERO_CLIENT_STORAGE = "zero-client-storage";
 }

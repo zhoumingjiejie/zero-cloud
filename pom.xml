@@ -171,7 +171,17 @@
                 <dependency>
                     <groupId>com.alibaba.cloud</groupId>
                     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                    <!--<exclusions>
+                        <exclusion>
+                            <groupId>org.springframework.cloud</groupId>
+                            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+                        </exclusion>
+                    </exclusions>-->
                 </dependency>
+                <!--<dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-loadbalancer</artifactId>
+                </dependency>-->
                 <!--nocas[end]-->
 
                 <!--去除默认注册中心-->

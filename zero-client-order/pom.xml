@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.icezerocat</groupId>
+        <artifactId>zero-cloud</artifactId>
+        <version>0.0.1</version>
+    </parent>
+    <artifactId>zero-client-order</artifactId>
+    <version>0.0.1</version>
+    <name>zero-client-order</name>
+    <description>订单客户端</description>
+
+    <properties>
+        <seata-spring-boot-starter.version>1.4.0</seata-spring-boot-starter.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--seata-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.seata</groupId>
+                    <artifactId>seata-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-spring-boot-starter</artifactId>
+            <version>${seata-spring-boot-starter.version}</version>
+        </dependency>
+
+        <!--db-->
+        <dependency>
+            <groupId>com.github.icezerocat.config</groupId>
+            <artifactId>zero-config-db</artifactId>
+        </dependency>
+
+        <!--config-->
+        <dependency>
+            <groupId>com.github.icezerocat.config</groupId>
+            <artifactId>zero-config-bootstrap</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+
+        <!--openFeign-->
+        <dependency>
+            <groupId>com.github.icezerocat</groupId>
+            <artifactId>zero-openfeign</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
