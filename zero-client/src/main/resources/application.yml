@@ -1,1 +1,5 @@
-
+spring:
+  zipkin:
+    locator:
+      discovery:
+        enabled: true
