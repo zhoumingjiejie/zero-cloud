@@ -1,5 +1,4 @@
 spring:
-  zipkin:
-    locator:
-      discovery:
-        enabled: true
+  sleuth:
+    sampler:
+      probability: 1

@@ -10,9 +10,7 @@ import github.com.icezerocat.mybatismp.service.BaseMpBuildService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -35,6 +33,16 @@ public class Client2Controller {
     private final BaseMpBuildService baseMpBuildService;
     private final FeignService feignService;
     //private final ClientFeignService clientFeignService;
+
+    /**
+     * sendMessage
+     *
+     * @return 获取发送的消息
+     */
+    @RequestMapping("sendMessage")
+    public HttpResult sendMessage(@RequestParam("message") String message) {
+        return HttpResult.ok("客户端2：".concat(message).concat(DateUtil.formatDateTime(new Date())));
+    }
 
     /**
      * say

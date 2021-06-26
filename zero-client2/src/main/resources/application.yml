@@ -1,6 +1,9 @@
 spring:
   profiles:
     include: db,test
+  sleuth:
+    sampler:
+      probability: 1
 
 jdbc:
   driverClassName: com.mysql.cj.jdbc.Driver
@@ -11,4 +14,7 @@ jdbc:
 #定时任务扫描包
 schedule:
   scanBasePackages:
-    #- com.github.icezerocat
+  #- com.github.icezerocat
+
+
+

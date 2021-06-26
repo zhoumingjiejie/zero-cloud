@@ -19,6 +19,11 @@ public interface FeignClientName {
     String ZERO_CLIENT = "zero-client";
 
     /**
+     * 客户端2
+     */
+    String ZERO_CLIENT2 = "zero-client2";
+
+    /**
      * 客户端1-RequestLine注解动态url请求
      */
     String ZERO_CLIENT_LINE = "zero-client-line";

@@ -1,6 +1,7 @@
 package com.github.icezerocat.zeroclient.web.controller;
 
 import com.github.icezerocat.zeroopenfeign.build.FeignBuild;
+import com.github.icezerocat.zeroopenfeign.client.service.Client2FeignService;
 import com.github.icezerocat.zeroopenfeign.client.service.ClientFeignService;
 import com.github.icezerocat.zeroopenfeign.client.service.ClientLineFeignService;
 import io.swagger.annotations.Api;
@@ -26,11 +27,14 @@ import java.util.Date;
 public class ClientController {
 
     private final ClientFeignService clientFeignService;
+    private final Client2FeignService client2FeignService;
     private ClientLineFeignService clientLineFeignService;
 
-    public ClientController(ClientFeignService clientFeignService) {
+    public ClientController(ClientFeignService clientFeignService, Client2FeignService client2FeignService) {
         this.clientFeignService = clientFeignService;
-        this.clientLineFeignService = FeignBuild.getFeignClient(ClientLineFeignService.class, "http://127.0.0.1:10003/zero-client/client");
+        this.client2FeignService = client2FeignService;
+        //this.clientLineFeignService = FeignBuild.getFeignClient(ClientLineFeignService.class, "http://127.0.0.1:10003/zero-client/client");
+        this.clientLineFeignService = FeignBuild.getFeignClient(ClientLineFeignService.class, "http://127.0.0.1:10004/zero-client2/client2");
     }
 
     /**
@@ -64,6 +68,17 @@ public class ClientController {
     @GetMapping("twoFeign")
     public String twoFeign() {
         String sendMessage = this.clientLineFeignService.sendMessage("我要兼容同一个地方");
+        return "twoFeign:" + new Date().toString() + "\t" + sendMessage;
+    }
+
+    /**
+     * feign两种调用方式，兼容性
+     *
+     * @return 调用时间
+     */
+    @GetMapping("client2Feign")
+    public String client2Feign() {
+        String sendMessage = this.client2FeignService.sendMessage("我要兼容同一个地方");
         return "twoFeign:" + new Date().toString() + "\t" + sendMessage;
     }
 }
