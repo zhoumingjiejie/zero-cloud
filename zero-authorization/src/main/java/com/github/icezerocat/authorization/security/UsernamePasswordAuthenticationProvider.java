@@ -43,8 +43,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         final UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
         if (this.passwordEncoder.matches(password, userDetails.getPassword())) {
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
-            return usernamePasswordAuthenticationToken;
+            return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
         }
 
         throw new BadCredentialsException("用户密码错误!");

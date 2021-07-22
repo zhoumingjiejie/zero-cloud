@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.sql.DataSource;
 import java.io.BufferedReader;
@@ -118,26 +117,33 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     /**
-     * 使用同一个密钥来编码 JWT 中的  OAuth2 令牌
+     * 使用同一个密钥来编码 JWT 中的  OAuth2 令牌（对称加密）
      *
      * @return Jwt访问令牌转换器
      */
     /*@Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey("123");
+        String publicKey = "123";
+        converter.setSigningKey(publicKey);
+        //不设置这个会出现 Cannot convert access token to JSON
+        converter.setVerifier(new RsaVerifier(publicKey));
         return converter;
     }*/
 
     /**
-     * 使用私钥编码 JWT 中的  OAuth2 令牌
+     * 使用私钥编码 JWT 中的  OAuth2 令牌（非对称加密）
      *
      * @return Jwt访问令牌转换器
      */
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("zero.jks"), "123456".toCharArray());
+        // 私密文件和密码。
+        org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory keyStoreKeyFactory
+                = new org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory((new ClassPathResource("zero.jks")), "123456".toCharArray());
+        //KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("zero.jks"), "123456".toCharArray());
+        // 私密文件的别名
         converter.setKeyPair(keyStoreKeyFactory.getKeyPair("zero"));
 
         //公钥（读取public.txt的公钥信息）
@@ -149,6 +155,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
             throw new RuntimeException(e);
         }
         converter.setVerifierKey(publicKey);
+        //不设置这个会出现 Cannot convert access token to JSON
+        //converter.setVerifier(new RsaVerifier(publicKey));
         return converter;
     }
 

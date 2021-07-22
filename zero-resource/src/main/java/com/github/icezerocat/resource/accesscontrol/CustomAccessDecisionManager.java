@@ -51,20 +51,28 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
      *     </dd>
      * </dl>
      *
-     * @param authentication   认证方式  {@link org.springframework.security.oauth2.provider.OAuth2Authentication}
-     * @param object           过滤器调用对象 {@link org.springframework.security.web.FilterInvocation}
-     * @param configAttributes 资源权限标识：由 {@link CustomFilterInvocationSecurityMetadataSource}
+     * @param authentication   CustomUserService中循环添加到 GrantedAuthority 对象中的权限信息集合.认证方式  {@link org.springframework.security.oauth2.provider.OAuth2Authentication}
+     * @param object           包含客户端发起的请求的requset信息，可转换为 HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();过滤器调用对象 {@link org.springframework.security.web.FilterInvocation}
+     * @param configAttributes 为MyInvocationSecurityMetadataSource的getAttributes(Object object)这个方法返回的结果，此方法是为了判定用户请求的url 是否在权限表中，
+     *                         如果在权限表中，则返回给 decide 方法，用来判定用户是否有此权限。如果不在权限表中则放行。
+     *                         资源权限标识：由 {@link CustomFilterInvocationSecurityMetadataSource}
      *                         组织的资源标识:
      *                         <pre>
-     *                                                                                                   - ClientAccessScope: ClientAccessScope.CACHE_PREFIX@ClientAccessScopeName<br>
-     *                                                                                                   - ClientAuthority: ClientAuthority.CACHE_PREFIX@ClientAuthorityName<br>
-     *                                                                                                   - UserAuthority: UserAuthority.CACHE_PREFIX@UserAuthorityName
-     *                                                                         </pre>
+     *                                                                                                                                                                                                                                                   - ClientAccessScope: ClientAccessScope.CACHE_PREFIX@ClientAccessScopeName<br>
+     *                                                                                                                                                                                                                                                   - ClientAuthority: ClientAuthority.CACHE_PREFIX@ClientAuthorityName<br>
+     *                                                                                                                                                                                                                                                   - UserAuthority: UserAuthority.CACHE_PREFIX@UserAuthorityName
+     *                                                                                                                                                                                                                         </pre>
      * @see AccessDecisionManager#decide(Authentication, Object, Collection)
      * @see CustomFilterInvocationSecurityMetadataSource#getAttributes(Object)
      */
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+        log.warn("自定义访问决策管理器:{}\n{}\n{}", authentication, object, configAttributes);
+        log.warn("自定义访问决策管理器:{}", authentication.getAuthorities());
+        if (true) {
+            log.warn("游客登录");
+            return;
+        }
         final OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
         final FilterInvocation filterInvocation = (FilterInvocation) object;
         final String resourceAddress =
@@ -123,6 +131,7 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
 
     /**
      * 支持配置属性
+     *
      * @param attribute 属性
      * @return true
      */

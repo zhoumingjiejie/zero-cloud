@@ -118,9 +118,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      * @return org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
      */
     private JwtAccessTokenConverter jwtAccessTokenConverter() {
-        final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("authorization-server.jks"), "SCLiKe11040218".toCharArray());
+        final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("oauth2.jks"), "oauth2".toCharArray());
         final JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("authorization-server-jwt-keypair"));
+        jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2"));
         return jwtAccessTokenConverter;
     }
 }

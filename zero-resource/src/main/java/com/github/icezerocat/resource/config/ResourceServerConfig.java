@@ -15,7 +15,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.web.client.RestTemplate;
@@ -45,7 +48,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     /**
      * 资源服务器保存的持有公钥的文件名
      */
-    private static final String AUTHORIZATION_SERVER_PUBLIC_KEY_FILENAME = "authorization-server.pub";
+    private static final String AUTHORIZATION_SERVER_PUBLIC_KEY_FILENAME = "pub.txt";
 
     /**
      * 授权服务器的 {@link org.springframework.security.oauth2.provider.endpoint.TokenKeyEndpoint} 供资源服务器请求授权服务器获取公钥的端点<br>
@@ -97,9 +100,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
      */
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(this.tokenStore());
+
         resources.resourceId(RESOURCE_ID).stateless(true)
                 //指定token服务
                 .tokenServices(new CustomResourceServerTokenServices(this.jwtAccessTokenConverter()))
+
+                //.tokenServices(defaultTokenServices)
                 .authenticationEntryPoint(this.authenticationEntryPoint);
     }
 
@@ -108,6 +116,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated()
                 //配置动态权限
                 .withObjectPostProcessor(new FilterSecurityInterceptorPostProcessor(this.accessDecisionManager, this.filterInvocationSecurityMetadataSource));
+    }
+
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(this.jwtAccessTokenConverter());
     }
 
     /**
@@ -120,7 +132,17 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
      */
     private JwtAccessTokenConverter jwtAccessTokenConverter() {
         final JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setVerifier(new org.springframework.security.jwt.crypto.sign.RsaVerifier(retrievePublicKey()));
+        //jwtAccessTokenConverter.setVerifier(new org.springframework.security.jwt.crypto.sign.RsaVerifier(retrievePublicKey()));
+        ClassPathResource classPathResource = new ClassPathResource(AUTHORIZATION_SERVER_PUBLIC_KEY_FILENAME);
+        String publicKey = null;
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(classPathResource.getInputStream()));
+            publicKey = bufferedReader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        jwtAccessTokenConverter.setSigningKey(publicKey);
         return jwtAccessTokenConverter;
     }
 

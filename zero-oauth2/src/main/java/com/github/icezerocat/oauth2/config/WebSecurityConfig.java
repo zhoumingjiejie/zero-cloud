@@ -24,6 +24,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
+    /**
+     * 身份验证管理器生成器
+     *
+     * @param auth 身份验证管理器生成器
+     * @throws Exception 认证异常
+     */
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         //用户信息保存在内存中
@@ -35,6 +41,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .withUser("test").password(this.passwordEncoder().encode("test")).roles("TEST");
     }
 
+    /**
+     * （登录页设置），（匿名用户放行，动态权限拦截，受保护请求）
+     * @param http Http安全
+     * @throws Exception 异常
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin() //登记界面，默认是permit All
