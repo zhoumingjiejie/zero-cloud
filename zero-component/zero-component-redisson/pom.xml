@@ -14,6 +14,8 @@
 
     <properties>
         <redisson-spring-boot-starter.version>3.14.0</redisson-spring-boot-starter.version>
+        <version.apache.commons.io>2.8.0</version.apache.commons.io>
+        <commons-collections4.version>4.1</commons-collections4.version>
     </properties>
 
     <dependencies>
@@ -31,6 +33,17 @@
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>${redisson-spring-boot-starter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${version.apache.commons.io}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
         </dependency>
 
     </dependencies>

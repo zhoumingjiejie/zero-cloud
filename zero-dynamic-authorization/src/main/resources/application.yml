@@ -1,0 +1,13 @@
+logging:
+  level:
+    com.github.icezerocat: debug
+spring:
+  profiles:
+    include: redis
+  application:
+    name: dynamic-authorization
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/demo_spring_security_oauth2
+    password: "123456"
+    username: root
+    driver-class-name: com.mysql.cj.jdbc.Driver

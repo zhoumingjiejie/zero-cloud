@@ -1,9 +1,18 @@
 package com.github.icezerocat.component.redisson.utils;
 
 import com.github.icezerocat.component.redisson.config.RedisApplicationContextHelper;
+import lombok.SneakyThrows;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.CollectionUtils;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -18,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author 0.0.0
  */
-@SuppressWarnings("all")
+@SuppressWarnings("unused")
 public class RedisUtil {
     private static volatile RedisTemplate<String, Object> redisTemplate = null;
     private static volatile RedisUtil redisUtil = null;
@@ -459,7 +468,7 @@ public class RedisUtil {
      */
     public <T> List<T> lGet(String key, long start, long end) {
         try {
-            return (List<T>) redisTemplate.<String, T>opsForList().range(key, start, end);
+            return (List<T>) redisTemplate.opsForList().range(key, start, end);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -611,5 +620,191 @@ public class RedisUtil {
             return 0L;
         }
     }
+
+
+    // =================================================================================================================
+
+    // ~ RedisKey
+    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Description: 设值
+     *
+     * @param key   缓存 {@link RedisKey}
+     * @param value 值
+     * @return T 放入缓存中的值
+     * @date 2020-04-27 11:05:05
+     */
+    public <T> T setValue(RedisKey key, T value) {
+        redisTemplate.opsForValue().set(key.of(), value);
+        return value;
+    }
+
+    /**
+     * Description: 设值
+     *
+     * @param key     缓存 {@link RedisKey}
+     * @param value   值
+     * @param seconds 有效时长 (秒)
+     * @return T 放入缓存中的值
+     * @date 2020-04-27 12:39:39
+     */
+    public <T> T setValue(RedisKey key, T value, long seconds) {
+        redisTemplate.opsForValue().set(key.of(), value, seconds, TimeUnit.SECONDS);
+        return value;
+    }
+
+    private Object getValue(String key) {
+        if (!Optional.ofNullable(redisTemplate.hasKey(key)).orElse(Boolean.FALSE)) {
+            return null;
+        }
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    /**
+     * Description: 取值
+     *
+     * @param key   缓存 {@link RedisKey}
+     * @param clazz 缓存对应的对象的 class 对象
+     * @return T or null
+     * @date 2020-04-27 12:32:28
+     */
+    public <T> T getValue(RedisKey key, Class<T> clazz) {
+        return clazz.cast(getValue(key.of()));
+    }
+
+
+    // =================================================================================================================
+
+    // ~ Hash
+    // -----------------------------------------------------------------------------------------------------------------
+    /**
+     * Description: 获取操作 Hash 的对象引用
+     */
+    public Hash hash() {
+        return new Hash();
+    }
+
+    /**
+     * Description: Hash 操作对象
+     */
+    public static class Hash {
+
+        /**
+         * Description: 设值
+         *
+         * @param key 缓存 {@link RedisKey}
+         * @param map Map 对象
+         * @author LiKe
+         * @date 2020-08-03 14:59:32
+         */
+        public void putAll(RedisKey key, Map<Object, Object> map) {
+            redisTemplate.opsForHash().putAll(key.of(), map);
+        }
+
+        /**
+         * Description: 获取全部
+         *
+         * @param key 缓存 {@link RedisKey}
+         * @return java.util.Map<Object, Object>
+         * @author LiKe
+         * @date 2020-08-03 16:38:55
+         */
+        public Map<Object, Object> getAll(RedisKey key) {
+            return redisTemplate.opsForHash().entries(key.of());
+        }
+    }
+
+    // =================================================================================================================
+
+    // ~ Files
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Description: 获取操作 Hash 的对象引用
+     */
+    public Files files() {
+        return new Files();
+    }
+
+    /**
+     * Description: 文件操作对象
+     */
+    public static class Files {
+
+        private static final String CACHE_KEY_PREFIX = "file:";
+
+        private static final String FIELD_FILE_NAME = "fileName";
+
+        private static final String FIELD_FILE_CONTENT = "fileContent";
+
+        /**
+         * Description: 缓存文件<br>
+         * Details: 将文件对象读入内存, 获取字节数组, 最后 {@code Base64} 编码. 以 缓存前缀 + 文件名 作为缓存 key
+         *
+         * @param file (Required) 文件对象
+         * @author LiKe
+         * @date 2020-10-09 14:41:03
+         */
+        @SneakyThrows
+        public void setFile(File file) {
+            final HashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
+
+            final String fileName = Objects.requireNonNull(file, "文件不能为空").getName();
+            final String fileContent = new String(
+                    Base64.getEncoder().encode(IOUtils.toByteArray(org.apache.commons.io.FileUtils.openInputStream(Objects.requireNonNull(file, "文件对象不能为空")))),
+                    StandardCharsets.UTF_8
+            );
+
+            final HashMap<String, String> map = new HashMap<>(2);
+            map.put(FIELD_FILE_NAME, fileName);
+            map.put(FIELD_FILE_CONTENT, fileContent);
+            ops.putAll(CACHE_KEY_PREFIX + fileName, map);
+        }
+
+        /**
+         * Description: 获取文件
+         *
+         * @param fileName (Required) 文件名
+         * @return java.io.File 文件对象
+         */
+        @SneakyThrows
+        public File getFile(String fileName) {
+            final HashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
+
+            // 缓存 Key
+            final Map<Object, Object> entries = ops.entries(CACHE_KEY_PREFIX + Objects.requireNonNull(fileName, "文件名不能为空"));
+            if (MapUtils.isEmpty(entries)) {
+                return null;
+            }
+
+            final String cachedFileName = MapUtils.getString(entries, FIELD_FILE_NAME);
+            final String cachedFileContent = MapUtils.getString(entries, FIELD_FILE_CONTENT);
+
+            final File file = new File(FileUtils.getTempDirectoryPath() + cachedFileName);
+            try (
+                    final FileOutputStream out = new FileOutputStream(file);
+                    final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(out)
+            ) {
+                bufferedOutputStream.write(Base64.getDecoder().decode(cachedFileContent));
+            }
+
+            return file;
+        }
+
+        /**
+         * Description: 获取文件的字节数组
+         *
+         * @param fileName (Required) 文件名
+         * @return byte[] 文件的字节数组
+         */
+        public byte[] getBytes(String fileName) {
+            final HashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
+
+            final Map<Object, Object> entries = ops.entries(CACHE_KEY_PREFIX + Objects.requireNonNull(fileName, "文件名不能为空"));
+            return Base64.getDecoder().decode(MapUtils.getString(entries, FIELD_FILE_CONTENT));
+        }
+
+    }
+
 
 }
