@@ -1,0 +1,9 @@
+tencent:
+  sms:
+    secretId: 'AKID85lBLEqBF2YnlSs1tUryoOhjV0EBrFMC'
+    secretKey: 'buxjDQM1PWMvDEyRdV6RUGlyuZz80bvy'
+    endpoint: 'sms.tencentcloudapi.com'
+    sdkAppId: '1400559280'
+    templateId: '1079036'
+    signName: '尼豆科技'
+    senderId: ''
