@@ -69,13 +69,35 @@
             <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
 
+        <!--验证lic-->
+        <dependency>
+            <groupId>com.github.ice-zero-cat</groupId>
+            <artifactId>component-license-verify-spring-boot-starter</artifactId>
+            <version>0.0.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <resources>
+            <!-- 保证resources下的所有的配置文件可以被过滤，即可以根据profile进行属性替换 -->
             <resource>
                 <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.yml</include>
+                </includes>
                 <filtering>true</filtering>
+            </resource>
+            <!-- 保证所有的resources下的配置文件能被编译打包，即能够被复制到classpath目录下 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <!--<include>**/*.*</include>-->
+                    <include>**/*.lic</include>
+                    <include>**/*.store</include>
+                </includes>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <plugins>
