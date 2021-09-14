@@ -1,0 +1,14 @@
+logging:
+  level:
+    com:
+      github:
+        icezerocat: debug
+
+spring:
+  activemq:
+    user: admin
+    password: admin
+    broker-url: tcp://120.48.29.220:61616
+    pool:
+      enabled: true
+      max-connections: 10

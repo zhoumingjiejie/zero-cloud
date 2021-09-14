@@ -1,0 +1,16 @@
+server:
+  port: 8081
+logging:
+  level:
+    com:
+      github:
+        icezerocat: debug
+
+spring:
+  activemq:
+    user: admin
+    password: chinaSoft_Raymon
+    broker-url: tcp://120.48.29.220:61616
+    pool:
+      enabled: true
+      max-connections: 10
