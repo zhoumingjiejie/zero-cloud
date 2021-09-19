@@ -1,6 +1,6 @@
 logging:
   level:
-    com.github.icezerocat: debug
+    com.github.icezerohub: debug
 spring:
   profiles:
     include: redis
@@ -13,4 +13,4 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 server:
-  port: 8080
+  port: 8081

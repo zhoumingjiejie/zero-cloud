@@ -6,6 +6,7 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import java.util.Collection;
 
@@ -111,6 +112,8 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
     public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
+
+    AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     //资源权限认证例子
    /* @Autowired

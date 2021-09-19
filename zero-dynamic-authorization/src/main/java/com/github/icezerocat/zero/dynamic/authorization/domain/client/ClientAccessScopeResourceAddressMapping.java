@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClientAccessScopeResourceAddressMapping {
 
-    public static final String CACHE_SUFFIX = "client-access-scope";
-
     /**
      * 客户端访问范围名称
      */

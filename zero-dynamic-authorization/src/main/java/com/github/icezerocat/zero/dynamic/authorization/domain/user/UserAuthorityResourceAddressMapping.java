@@ -15,11 +15,6 @@ import lombok.NoArgsConstructor;
 public class UserAuthorityResourceAddressMapping {
 
     /**
-     * 缓存前缀
-     */
-    public static final String CACHE_PREFIX = "user-authority";
-
-    /**
      * 用户职权名
      */
     private String userAuthorityName;

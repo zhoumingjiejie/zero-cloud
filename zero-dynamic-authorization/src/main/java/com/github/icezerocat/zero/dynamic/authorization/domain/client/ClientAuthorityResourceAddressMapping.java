@@ -16,11 +16,6 @@ import lombok.NoArgsConstructor;
 public class ClientAuthorityResourceAddressMapping {
 
     /**
-     * 缓存前缀
-     */
-    public static final String CACHE_PREFIX = "client-authority";
-
-    /**
      * 客户端职权名称
      */
     private String clientAuthorityName;

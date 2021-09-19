@@ -8,6 +8,7 @@ import com.github.icezerocat.zero.dynamic.authorization.domain.user.UserAuthorit
 import com.github.icezerocat.zero.dynamic.authorization.repository.client.ClientAccessScopeMapper;
 import com.github.icezerocat.zero.dynamic.authorization.repository.client.ClientAuthorityMapper;
 import com.github.icezerocat.zero.dynamic.authorization.repository.user.UserAuthorityMapper;
+import com.github.icezerocat.zerocommon.constant.Oauth2RedisKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -29,11 +30,6 @@ import java.util.stream.Collectors;
 @Order(1)
 @Component
 public class ResourceAddressMetadataInitializer implements ApplicationRunner {
-
-    /**
-     * metadata.resource-address 缓存前缀
-     */
-    private static final String CACHE_PREFIX_METADATA_RESOURCE_ADDRESS = "metadata:resource-address";
 
     @Resource
     private ClientAccessScopeMapper clientAccessScopeMapper;
@@ -59,7 +55,7 @@ public class ResourceAddressMetadataInitializer implements ApplicationRunner {
      */
     private void initClientAccessScope() {
         RedisUtil.getInstance().hash().putAll(
-                RedisKey.builder().prefix(CACHE_PREFIX_METADATA_RESOURCE_ADDRESS).suffix(ClientAccessScopeResourceAddressMapping.CACHE_SUFFIX).build(),
+                RedisKey.builder().prefix(Oauth2RedisKey.METADATA_RESOURCE_ADDRESS_CACHE_PREFIX.getKey()).suffix(Oauth2RedisKey.CLIENT_ACCESS_SCOPE.getKey()).build(),
                 clientAccessScopeMapper.composeClientAccessScopeResourceAddressMapping().stream().collect(Collectors.toMap(
                         ClientAccessScopeResourceAddressMapping::getClientAccessScopeName,
                         ClientAccessScopeResourceAddressMapping::getResourceAddress
@@ -75,7 +71,7 @@ public class ResourceAddressMetadataInitializer implements ApplicationRunner {
      */
     private void initClientAuthority() {
         RedisUtil.getInstance().hash().putAll(
-                RedisKey.builder().prefix(CACHE_PREFIX_METADATA_RESOURCE_ADDRESS).suffix(ClientAuthorityResourceAddressMapping.CACHE_PREFIX).build(),
+                RedisKey.builder().prefix(Oauth2RedisKey.METADATA_RESOURCE_ADDRESS_CACHE_PREFIX.getKey()).suffix(Oauth2RedisKey.CLIENT_AUTHORITY.getKey()).build(),
                 clientAuthorityMapper.composeClientAuthorityResourceAddressMapping().stream().collect(Collectors.toMap(
                         ClientAuthorityResourceAddressMapping::getClientAuthorityName,
                         ClientAuthorityResourceAddressMapping::getResourceAddress
@@ -91,7 +87,7 @@ public class ResourceAddressMetadataInitializer implements ApplicationRunner {
      */
     private void initUserAuthority() {
         RedisUtil.getInstance().hash().putAll(
-                RedisKey.builder().prefix(CACHE_PREFIX_METADATA_RESOURCE_ADDRESS).suffix(UserAuthorityResourceAddressMapping.CACHE_PREFIX).build(),
+                RedisKey.builder().prefix(Oauth2RedisKey.METADATA_RESOURCE_ADDRESS_CACHE_PREFIX.getKey()).suffix(Oauth2RedisKey.USER_AUTHORITY.getKey()).build(),
                 userAuthorityMapper.composeUserAuthorityResourceAddressMapping().stream().collect(Collectors.toMap(
                         UserAuthorityResourceAddressMapping::getUserAuthorityName,
                         UserAuthorityResourceAddressMapping::getResourceAddress
