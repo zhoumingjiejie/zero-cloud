@@ -1,6 +1,8 @@
 package com.github.icezerocat.zerogateway.config;
 
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Mono;
@@ -17,5 +19,13 @@ public class RateLimiterConfig {
     @Bean(value = "remoteAddrKeyResolver")
     public KeyResolver remoteAddrKeyResolver() {
         return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getAddress().getHostAddress());
+    }
+
+    @Bean
+    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
+        return builder.routes()
+                .route("blog", r ->
+                        r.path("/api-boot-datasource-switch.html").uri("http://blog.yuqiyu.com"))
+                .build();
     }
 }
