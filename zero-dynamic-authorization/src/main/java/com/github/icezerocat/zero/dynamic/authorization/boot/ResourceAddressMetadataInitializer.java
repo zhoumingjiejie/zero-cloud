@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 /**
  * Description: 资源地址元数据初始化<br>
- * Details: 授权服务器启动的时候, 从数据源里加载访问控制香瓜你的元数据, 并放入缓存. 供资源服务器调用
+ * Details: 授权服务器启动的时候, 从数据源里加载访问控制相关的元数据, 并放入缓存. 供资源服务器调用
  * CreateDate:  2021/7/23 11:32
  *
  * @author zero

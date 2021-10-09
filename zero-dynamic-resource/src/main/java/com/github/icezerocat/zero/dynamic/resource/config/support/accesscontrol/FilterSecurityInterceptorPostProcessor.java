@@ -1,4 +1,4 @@
-package com.github.icezerohub.zero.dynamic.resource.config.support.accesscontrol;
+package com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol;
 
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;

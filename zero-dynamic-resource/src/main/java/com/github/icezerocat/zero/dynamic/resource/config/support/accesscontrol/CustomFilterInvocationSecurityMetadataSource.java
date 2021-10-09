@@ -1,4 +1,4 @@
-package com.github.icezerohub.zero.dynamic.resource.config.support.accesscontrol;
+package com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol;
 
 import com.github.icezerocat.component.redisson.utils.RedisKey;
 import com.github.icezerocat.component.redisson.utils.RedisUtil;
@@ -46,7 +46,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
     /**
      * 资源服务 ID
      */
-    private String resourceId;
+    private String resourceId = "resource-server";
 
     /**
      * 设置资源ID
@@ -80,22 +80,39 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         //   然后, AccessDecisionManager 根据 OAuth2Authentication 判断 authorities / scopes 是否在集合中
 
         Collection<ConfigAttribute> configAttributes = new HashSet<>();
+        //添加客户端访问范围
+        this.addClientAccessScope(configAttributes, resourceAddress);
+        //添加客户端职权
+        this.addClientAuthority(configAttributes, resourceAddress);
+        //添加用户端职权
+        this.addUserAuthority(configAttributes, resourceAddress);
 
-        return null;
+        // ~ 为 AccessDecisionManager 提供包含匹配当前访问的资源端点的 ClientAuthority, UserAuthority, 以及 ClientAccessScope 的集合
+        //   格式:
+        //       - ClientAccessScope: ClientAccessScope.CACHE_PREFIX@ClientAccessScopeName
+        //       - ClientAuthority: ClientAuthority.CACHE_PREFIX@ClientAuthorityName
+        //       - UserAuthority: UserAuthority.CACHE_PREFIX@UserAuthorityName
+        return configAttributes;
     }
 
     @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
-        return null;
+        log.debug("CustomFilterInvocationSecurityMetadataSource :: getAllConfigAttributes");
+        throw new UnsupportedOperationException("不支持的操作!");
     }
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return false;
+        log.debug("CustomFilterInvocationSecurityMetadataSource :: supports :: {}", clazz.getCanonicalName());
+        // ~ FilterInvocation: 持有与 HTTP 过滤器相关的对象
+        return FilterInvocation.class.isAssignableFrom(clazz);
     }
 
     /**
      * 添加客户端访问范围
+     *
+     * @param configAttributes 配置属性
+     * @param resourceAddress  资源地址
      */
     private void addClientAccessScope(Collection<ConfigAttribute> configAttributes, String resourceAddress) {
         // 获取缓存数据：客户端访问范围名称(metadata:resource-address:client-access-scope)
@@ -113,11 +130,47 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         );
     }
 
-    public static void main(String[] args) {
+    /**
+     * 添加客户端职权
+     *
+     * @param configAttributes 配置属性
+     * @param resourceAddress  资源地址
+     */
+    private void addClientAuthority(Collection<ConfigAttribute> configAttributes, String resourceAddress) {
+        final Map<Object, Object> clientAuthorityResourceAddressMapping = RedisUtil.getInstance().hash().getAll(METADATA_CLIENT_AUTHORITY_RESOURCE_ADDRESS_CACHE_KEY);
+        configAttributes.addAll(clientAuthorityResourceAddressMapping.keySet()
+                .stream()
+                .filter(clientAuthorityName ->
+                        StringUtils.equals(MapUtils.getString(clientAuthorityResourceAddressMapping, clientAuthorityName), resourceAddress)
+                )
+                .map(clientAuthorityName -> new SecurityConfig(StringUtils.join(Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.getKey(), clientAuthorityName)))
+                .collect(Collectors.toSet())
+        );
+    }
+
+    /**
+     * 添加用户端职权
+     *
+     * @param configAttributes 配置属性
+     * @param resourceAddress  资源地址
+     */
+    private void addUserAuthority(Collection<ConfigAttribute> configAttributes, String resourceAddress) {
+        final Map<Object, Object> userAuthorityResourceAddressMapping = RedisUtil.getInstance().hash().getAll(METADATA_USER_AUTHORITY_RESOURCE_ADDRESS_CACHE_KEY);
+        configAttributes.addAll(userAuthorityResourceAddressMapping.keySet()
+                .stream()
+                .filter(userAuthorityName ->
+                        StringUtils.equals(MapUtils.getString(userAuthorityResourceAddressMapping, userAuthorityName), resourceAddress)
+                )
+                .map(userAuthorityName -> new SecurityConfig(StringUtils.join(Oauth2RedisKey.CONFIG_ATTR_PREFIX_USER_AUTHORITY.getKey(), userAuthorityName)))
+                .collect(Collectors.toSet())
+        );
+    }
+
+    /*public static void main(String[] args) {
         Map<String, String> stringStringHashMap = new HashMap<>();
         stringStringHashMap.put("a","av");
         stringStringHashMap.put("b","bv");
        Set<String> stringSet = stringStringHashMap.keySet().stream().peek(System.out::println).collect(Collectors.toSet());
         System.out.println(stringSet);
-    }
+    }*/
 }

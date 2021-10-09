@@ -1,4 +1,4 @@
-package com.github.icezerohub.zero.dynamic.resource;
+package com.github.icezerocat.zero.dynamic.resource;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author 0.0.0
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.github.icezerocat"})
 public class ZeroDynamicResourceApplication {
 
     public static void main(String[] args) {

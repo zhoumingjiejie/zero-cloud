@@ -1,5 +1,6 @@
-package com.github.icezerocat.resource.accesscontrol;
+package com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol;
 
+import com.github.icezerocat.zerocommon.constant.Oauth2RedisKey;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,13 +15,14 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Description: 自定义访问决策管理器
- * CreateDate:  2021/1/13 18:32
+ * Description: 用于提供最终的访问决策控制.
+ * CreateDate:  2021/8/10 20:40
  *
  * @author zero
  * @version 1.0
@@ -37,91 +39,73 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
     /**
      * 资源服务 ID
      */
-    private String resourceId;
+    private String resourceId = "resource-server";
 
     /**
-     * Description: 实现该资源服务的访问控制<br>
-     * <dl>
-     *     <dt>Access control principles:</dt>
-     *     <dd>{@link org.springframework.security.oauth2.provider.OAuth2Authentication#isClientOnly()}{@code = true}: 验证客户端权限</dd>
-     *     <dd>
-     *         {@link org.springframework.security.oauth2.provider.OAuth2Authentication#isClientOnly()}{@code = false}: <br>
-     *             - 如果是第一方客户端前端 ({@code CLIENT_AUTHORITY_FIRST_PARTY_FRONTEND_CLIENT}), 校验用户权限;<br>
-     *             - 如果是第三方应用, 校验用户全和客户端的权限;
-     *     </dd>
-     * </dl>
+     * 设置资源ID
      *
-     * @param authentication   CustomUserService中循环添加到 GrantedAuthority 对象中的权限信息集合.认证方式  {@link org.springframework.security.oauth2.provider.OAuth2Authentication}
-     * @param object           包含客户端发起的请求的requset信息，可转换为 HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();过滤器调用对象 {@link org.springframework.security.web.FilterInvocation}
-     * @param configAttributes 为MyInvocationSecurityMetadataSource的getAttributes(Object object)这个方法返回的结果，此方法是为了判定用户请求的url 是否在权限表中，
-     *                         如果在权限表中，则返回给 decide 方法，用来判定用户是否有此权限。如果不在权限表中则放行。
-     *                         资源权限标识：由 {@link CustomFilterInvocationSecurityMetadataSource}
-     *                         组织的资源标识:
-     *                         <pre>
-     *                              - ClientAccessScope: ClientAccessScope.CACHE_PREFIX@ClientAccessScopeName<br>
-     *                              - ClientAuthority: ClientAuthority.CACHE_PREFIX@ClientAuthorityName<br>
-     *                              - UserAuthority: UserAuthority.CACHE_PREFIX@UserAuthorityName
-     *                         </pre>
-     * @see AccessDecisionManager#decide(Authentication, Object, Collection)
-     * @see CustomFilterInvocationSecurityMetadataSource#getAttributes(Object)
+     * @param resourceId 资源ID
      */
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
+    }
+
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
         log.warn("自定义访问决策管理器:{}\n{}\n{}", authentication, object, configAttributes);
         log.warn("自定义访问决策管理器:{}", authentication.getAuthorities());
-        if (true) {
-            log.warn("游客登录");
-            return;
-        }
         final OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
         final FilterInvocation filterInvocation = (FilterInvocation) object;
         final String resourceAddress =
-                StringUtils.join(filterInvocation.getRequestUrl(), CustomFilterInvocationSecurityMetadataSource.AT, Objects.requireNonNull(resourceId, "资源服务器 ID 未定义!"));
+                StringUtils.join(filterInvocation.getRequestUrl(), Oauth2RedisKey.AT.getKey(), Objects.requireNonNull(resourceId, "资源服务器 ID 未定义!"));
 
         final boolean clientOnly = oAuth2Authentication.isClientOnly();
         //主体名
         final String principalName = oAuth2Authentication.getName();
+        log.debug("主题名：{}", principalName);
         //元数据源
         final Set<String> metadataSource = configAttributes.stream().map(ConfigAttribute::getAttribute).collect(Collectors.toSet());
 
         if (clientOnly) {
-            log.debug("Access controller :: 请求来自第一方客户端 ...");
+            //内部客户端模式走这里
+            log.debug("Access controller :: 请求来自第一方【客户端】 ...");
             final Set<String> clientAuthorities = oAuth2Authentication.getOAuth2Request().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
             if (metadataSource.stream()
-                    .filter(configAttrStr -> StringUtils.startsWith(configAttrStr, CustomFilterInvocationSecurityMetadataSource.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY))
+                    .filter(configAttrStr -> StringUtils.startsWith(configAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.getKey()))
                     .noneMatch(filteredConfigAttrStr ->
                             org.apache.commons.collections4.CollectionUtils.containsAny(clientAuthorities,
-                                    StringUtils.substring(filteredConfigAttrStr,
-                                            CustomFilterInvocationSecurityMetadataSource.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.length())))
+                                    Collections.singleton(StringUtils.substring(filteredConfigAttrStr,
+                                            Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.getKey().length()))))
             ) {
                 throw new InsufficientAuthenticationException(String.format("Access controller :: denied :: (客户端: %s) 没有足够的权限访问该资源: %s", principalName, resourceAddress));
             }
         } else {
-            log.debug("Access controller :: 请求可能来自第一方前端 ...");
+            //内部隐式、密码、授权模式走这里
+            log.debug("Access controller :: 请求可能来自第一方【前端】 ...");
             final Set<String> userAuthorities = oAuth2Authentication.getUserAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
 
             // ~ 校验用户权限
             if (metadataSource.stream()
-                    .filter(configAttrStr -> StringUtils.startsWith(configAttrStr, CustomFilterInvocationSecurityMetadataSource.CONFIG_ATTR_PREFIX_USER_AUTHORITY))
+                    .filter(configAttrStr -> StringUtils.startsWith(configAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_USER_AUTHORITY.getKey()))
                     .noneMatch(filteredConfigAttrStr ->
                             org.apache.commons.collections4.CollectionUtils.containsAny(userAuthorities,
-                                    StringUtils.substring(filteredConfigAttrStr,
-                                            CustomFilterInvocationSecurityMetadataSource.CONFIG_ATTR_PREFIX_USER_AUTHORITY.length())))
+                                    Collections.singleton(StringUtils.substring(filteredConfigAttrStr,
+                                            Oauth2RedisKey.CONFIG_ATTR_PREFIX_USER_AUTHORITY.getKey().length()))))
             ) {
                 throw new InsufficientAuthenticationException(String.format("Access controller :: denied :: (用户: %s) 没有足够的权限访问该资源: %s", principalName, resourceAddress));
             }
 
-            if (!org.apache.commons.collections4.CollectionUtils.containsAny(userAuthorities, CLIENT_AUTHORITY_FIRST_PARTY_FRONTEND_CLIENT)) {
-                log.debug("Access controller :: 请求来自第三方客户端 ...");
+            if (!org.apache.commons.collections4.CollectionUtils.containsAny(userAuthorities, Collections.singleton(CLIENT_AUTHORITY_FIRST_PARTY_FRONTEND_CLIENT))) {
+                log.debug("Access controller :: 请求来自第三方【客户端】 ...");
                 final Set<String> clientScopeNames = oAuth2Authentication.getOAuth2Request().getScope();
                 // ~ 第三方应用: 还需要客户端 SCOPE
                 if (metadataSource.stream()
                         .filter(configAttrStr ->
-                                StringUtils.startsWith(configAttrStr, CustomFilterInvocationSecurityMetadataSource.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE))
+                                StringUtils.startsWith(configAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE.getKey()))
                         .noneMatch(filteredConfigAttrStr ->
                                 CollectionUtils.containsAny(clientScopeNames,
-                                        StringUtils.substring(filteredConfigAttrStr,
-                                                CustomFilterInvocationSecurityMetadataSource.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE.length())))
+                                        Collections.singleton(StringUtils.substring(filteredConfigAttrStr,
+                                                Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE.getKey().length()))))
                 ) {
                     throw new InsufficientAuthenticationException(String.format("Access controller :: denied :: (客户端: %s) 的方位范围不包括资源: %s", principalName, resourceAddress));
                 }
@@ -129,12 +113,6 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         }
     }
 
-    /**
-     * 支持配置属性
-     *
-     * @param attribute 属性
-     * @return true
-     */
     @Override
     public boolean supports(ConfigAttribute attribute) {
         return true;
@@ -145,14 +123,5 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         log.debug("CustomFilterInvocationSecurityMetadataSource :: supports :: {}", clazz.getCanonicalName());
         // ~ FilterInvocation: 持有与 HTTP 过滤器相关的对象
         return FilterInvocation.class.isAssignableFrom(clazz);
-    }
-
-    /**
-     * 设置资源ID
-     *
-     * @param resourceId 资源ID
-     */
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
     }
 }

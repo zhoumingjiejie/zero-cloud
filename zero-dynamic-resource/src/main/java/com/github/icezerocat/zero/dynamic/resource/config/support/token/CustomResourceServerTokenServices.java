@@ -1,4 +1,4 @@
-package com.github.icezerohub.zero.dynamic.resource.config.support.token;
+package com.github.icezerocat.zero.dynamic.resource.config.support.token;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;

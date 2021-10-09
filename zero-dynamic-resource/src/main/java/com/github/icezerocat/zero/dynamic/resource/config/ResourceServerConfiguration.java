@@ -1,10 +1,10 @@
-package com.github.icezerohub.zero.dynamic.resource.config;
+package com.github.icezerocat.zero.dynamic.resource.config;
 
 import com.alibaba.fastjson.JSON;
-import com.github.icezerohub.zero.dynamic.resource.config.support.accesscontrol.CustomAccessDecisionManager;
-import com.github.icezerohub.zero.dynamic.resource.config.support.accesscontrol.CustomFilterInvocationSecurityMetadataSource;
-import com.github.icezerohub.zero.dynamic.resource.config.support.accesscontrol.FilterSecurityInterceptorPostProcessor;
-import com.github.icezerohub.zero.dynamic.resource.config.support.token.CustomResourceServerTokenServices;
+import com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol.CustomAccessDecisionManager;
+import com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol.CustomFilterInvocationSecurityMetadataSource;
+import com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol.FilterSecurityInterceptorPostProcessor;
+import com.github.icezerocat.zero.dynamic.resource.config.support.token.CustomResourceServerTokenServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
