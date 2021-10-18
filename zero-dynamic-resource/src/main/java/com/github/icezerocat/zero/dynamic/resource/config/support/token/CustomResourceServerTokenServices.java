@@ -42,6 +42,8 @@ public class CustomResourceServerTokenServices implements ResourceServerTokenSer
         // ~ 令牌过期判断
         final OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(accessToken);
         if (oAuth2AccessToken.isExpired()) {
+            //TODO Token刷新token操作
+            log.debug("Token刷新token操作");
             throw new InvalidTokenException("Token has expired!");
         }
 

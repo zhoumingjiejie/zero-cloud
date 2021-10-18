@@ -1,6 +1,7 @@
 package com.github.icezerocat.zero.dynamic.resource.config;
 
 import com.alibaba.fastjson.JSON;
+import com.github.icezerocat.zero.dynamic.resource.config.support.CustomResourceAuthenticationEntryPoint;
 import com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol.CustomAccessDecisionManager;
 import com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol.CustomFilterInvocationSecurityMetadataSource;
 import com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol.FilterSecurityInterceptorPostProcessor;
@@ -67,6 +68,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
      */
     final private CustomFilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource;
 
+    /**
+     * 拦截认证失败端点
+     */
+    final private CustomResourceAuthenticationEntryPoint customResourceAuthenticationEntryPoint;
+
     // ~ ResourceServerSecurityConfigurer configure
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -78,6 +84,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         // ~ 指定 ResourceServerTokenServices
         resources.tokenServices(new CustomResourceServerTokenServices(jwtAccessTokenConverter()));
 
+        // ~ AuthenticationEntryPoint. ref: OAuth2AuthenticationProcessingFilter
+        resources.authenticationEntryPoint(this.customResourceAuthenticationEntryPoint);
         // @formatter:on
     }
 
