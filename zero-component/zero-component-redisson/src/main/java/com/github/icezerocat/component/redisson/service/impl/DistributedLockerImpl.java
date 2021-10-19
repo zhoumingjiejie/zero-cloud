@@ -3,9 +3,7 @@ package com.github.icezerocat.component.redisson.service.impl;
 import com.github.icezerocat.component.redisson.service.DistributedLocker;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,11 +13,13 @@ import java.util.concurrent.TimeUnit;
  * @author zero
  * @version 1.0
  */
-@Service("distributedLocker")
 public class DistributedLockerImpl implements DistributedLocker {
 
-    @Resource
     private RedissonClient redissonClient;
+
+    public DistributedLockerImpl(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
+    }
 
     @Override
     public RLock lock(String lockKey) {
@@ -31,7 +31,7 @@ public class DistributedLockerImpl implements DistributedLocker {
     @Override
     public RLock lock(String lockKey, long leaseTime) {
         RLock lock = this.redissonClient.getLock(lockKey);
-        return this.lock(lock,leaseTime);
+        return this.lock(lock, leaseTime);
     }
 
     @Override

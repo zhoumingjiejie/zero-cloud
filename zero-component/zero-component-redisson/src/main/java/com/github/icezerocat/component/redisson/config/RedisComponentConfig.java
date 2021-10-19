@@ -1,5 +1,10 @@
 package com.github.icezerocat.component.redisson.config;
 
+import com.github.icezerocat.component.redisson.service.DistributedLocker;
+import com.github.icezerocat.component.redisson.service.impl.DistributedLockerImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -8,10 +13,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-
-import javax.sql.DataSource;
 
 /**
  * Created by zmj
@@ -19,8 +20,9 @@ import javax.sql.DataSource;
  *
  * @author 0.0.0
  */
+@Slf4j
 @Configuration
-public class RedisConfig {
+public class RedisComponentConfig {
     /**
      * redis序列化配置
      *
@@ -28,7 +30,9 @@ public class RedisConfig {
      * @return redisTemplate
      */
     @Bean
+    @ConditionalOnMissingBean(name = "redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        log.debug("stater:redis加载");
         // 配置redisTemplate
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
@@ -53,6 +57,7 @@ public class RedisConfig {
      * @return StringRedisTemplate
      */
     @Bean
+    @ConditionalOnMissingBean(name = "stringRedisTemplate")
     public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         StringRedisTemplate template = new StringRedisTemplate(redisConnectionFactory);
         // description 开启redis事务（仅支持单机，不支持cluster）
@@ -61,13 +66,14 @@ public class RedisConfig {
     }
 
     /**
-     * description 配置事务管理器
+     * 分布式锁
      *
-     * @param dataSource 数据源
-     * @return jdbc事务管理器
-     **/
+     * @param redissonClient redis客户端
+     * @return 分布式锁
+     */
     @Bean
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
+    @ConditionalOnMissingBean(name = "distributedLocker")
+    public DistributedLocker distributedLocker(RedissonClient redissonClient) {
+        return new DistributedLockerImpl(redissonClient);
     }
 }
