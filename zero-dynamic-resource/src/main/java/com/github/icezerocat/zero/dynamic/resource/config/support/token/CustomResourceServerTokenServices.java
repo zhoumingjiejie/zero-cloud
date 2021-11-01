@@ -37,7 +37,7 @@ public class CustomResourceServerTokenServices implements ResourceServerTokenSer
     @Override
     public OAuth2Authentication loadAuthentication(String accessToken) throws AuthenticationException, InvalidTokenException {
         log.debug("CustomResourceServerTokenServices :: loadAuthentication called ...");
-        log.trace("CustomResourceServerTokenServices :: loadAuthentication :: accessToken: {}", accessToken);
+        log.debug("CustomResourceServerTokenServices :: loadAuthentication :: accessToken: {}", accessToken);
 
         // ~ 令牌过期判断
         final OAuth2AccessToken oAuth2AccessToken = tokenStore.readAccessToken(accessToken);

@@ -2,6 +2,37 @@ server:
   port: 80
 logging:
   level:
-    com:
-      github:
-        icezerocat: debug
+    com.github.icezerocat: debug
+    org.springframework.web: info
+    com.github.binarywang.demo.wx.mp: debug
+    me.chanjar.weixin: debug
+  file:
+    name: ./logs/@project.artifactId@/info.log
+
+wx:
+  mp:
+    useRedis: false
+    redisConfig:
+      host: 127.0.0.1
+      port: 6379
+    configs:
+      #      - appId: wx21c8c749fc682656 # 第一个公众号的appid
+      #        secret: dddd9042f525edbf5050d2d74d3d51c2 # 公众号的appsecret
+      #        token: icezerocat # 接口配置里的Token值
+      #        aesKey: oNQ5jhzh3cjQckN4lJttPlZ43ZJ9aDkB59BR3hta1Pp # 接口配置里的EncodingAESKey值
+      #夏令营报名中心
+      - appId: wx829a59173aba7208 # 第一个公众号的appid
+        secret: 52880ef80c15549aa21d72f352e4e83f # 公众号的appsecret
+        token: WLvGnmjQr5BrMzaqaGAl4nd95Qv5aaNc # 接口配置里的Token值
+        aesKey: b3h4PfZHa46Bk3HFB0fZ4qAZP03Z3POaZO0H8B4P3g0 # 接口配置里的EncodingAESKey值
+
+  miniapp:
+    configs:
+      - appid: #微信小程序的appid
+        secret: #微信小程序的Secret
+        token: #微信小程序消息服务器配置的token
+        aesKey: #微信小程序消息服务器配置的EncodingAESKey
+        msgDataFormat: JSON
+spring:
+  profiles:
+    active: dev
