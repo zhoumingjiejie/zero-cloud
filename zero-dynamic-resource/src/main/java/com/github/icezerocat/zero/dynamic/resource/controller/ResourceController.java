@@ -25,4 +25,12 @@ public class ResourceController {
         log.debug(securityContext);
         return securityContext;
     }
+
+    @GetMapping("/access2")
+    public String access2() {
+        final String securityContext = JSON.toJSONString(SecurityContextHolder.getContext());
+        log.debug("resource-server accessed with security context: ");
+        log.debug(securityContext);
+        return securityContext;
+    }
 }

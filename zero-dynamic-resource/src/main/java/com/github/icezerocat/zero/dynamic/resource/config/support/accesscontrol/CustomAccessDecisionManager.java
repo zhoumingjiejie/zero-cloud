@@ -2,7 +2,6 @@ package com.github.icezerocat.zero.dynamic.resource.config.support.accesscontrol
 
 import com.github.icezerocat.zerocommon.constant.Oauth2RedisKey;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
@@ -67,15 +66,15 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         final Set<String> metadataSource = configAttributes.stream().map(ConfigAttribute::getAttribute).collect(Collectors.toSet());
 
         if (clientOnly) {
-            //内部客户端模式走这里
+            //内部客户端模式走这里，使用client-authority客户端职权进行鉴权
             log.debug("Access controller :: 请求来自第一方【客户端】 ...");
             final Set<String> clientAuthorities = oAuth2Authentication.getOAuth2Request().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
             if (metadataSource.stream()
+                    //过滤获取 client-authority@ 开头的数据
                     .filter(configAttrStr -> StringUtils.startsWith(configAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.getKey()))
-                    .noneMatch(filteredConfigAttrStr ->
-                            org.apache.commons.collections4.CollectionUtils.containsAny(clientAuthorities,
-                                    Collections.singleton(StringUtils.substring(filteredConfigAttrStr,
-                                            Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.getKey().length()))))
+                    .noneMatch(filteredConfigAttrStr -> clientAuthorities.contains(
+                            StringUtils.substring(filteredConfigAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.getKey().length())
+                    ))
             ) {
                 throw new InsufficientAuthenticationException(String.format("Access controller :: denied :: (客户端: %s) 没有足够的权限访问该资源: %s", principalName, resourceAddress));
             }
@@ -84,17 +83,17 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
             log.debug("Access controller :: 请求可能来自第一方【前端】 ...");
             final Set<String> userAuthorities = oAuth2Authentication.getUserAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
 
-            // ~ 校验用户权限
+            // ~ 校验用户权限：使用user-authority用户端职权进行鉴权
             if (metadataSource.stream()
                     .filter(configAttrStr -> StringUtils.startsWith(configAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_USER_AUTHORITY.getKey()))
-                    .noneMatch(filteredConfigAttrStr ->
-                            org.apache.commons.collections4.CollectionUtils.containsAny(userAuthorities,
-                                    Collections.singleton(StringUtils.substring(filteredConfigAttrStr,
-                                            Oauth2RedisKey.CONFIG_ATTR_PREFIX_USER_AUTHORITY.getKey().length()))))
+                    .noneMatch(filteredConfigAttrStr -> userAuthorities.contains(
+                            StringUtils.substring(filteredConfigAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_USER_AUTHORITY.getKey().length()))
+                    )
             ) {
                 throw new InsufficientAuthenticationException(String.format("Access controller :: denied :: (用户: %s) 没有足够的权限访问该资源: %s", principalName, resourceAddress));
             }
 
+            //使用client-access-scope客户端访问范围进行鉴权
             if (!org.apache.commons.collections4.CollectionUtils.containsAny(userAuthorities, Collections.singleton(CLIENT_AUTHORITY_FIRST_PARTY_FRONTEND_CLIENT))) {
                 log.debug("Access controller :: 请求来自第三方【客户端】 ...");
                 final Set<String> clientScopeNames = oAuth2Authentication.getOAuth2Request().getScope();
@@ -102,10 +101,9 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
                 if (metadataSource.stream()
                         .filter(configAttrStr ->
                                 StringUtils.startsWith(configAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE.getKey()))
-                        .noneMatch(filteredConfigAttrStr ->
-                                CollectionUtils.containsAny(clientScopeNames,
-                                        Collections.singleton(StringUtils.substring(filteredConfigAttrStr,
-                                                Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE.getKey().length()))))
+                        .noneMatch(filteredConfigAttrStr -> clientScopeNames.contains(
+                                StringUtils.substring(filteredConfigAttrStr, Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE.getKey().length()))
+                        )
                 ) {
                     throw new InsufficientAuthenticationException(String.format("Access controller :: denied :: (客户端: %s) 的方位范围不包括资源: %s", principalName, resourceAddress));
                 }

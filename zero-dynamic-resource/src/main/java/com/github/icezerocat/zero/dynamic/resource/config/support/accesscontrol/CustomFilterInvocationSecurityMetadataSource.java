@@ -11,8 +11,12 @@ import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +51,11 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
      * 资源服务 ID
      */
     private String resourceId = "resource-server";
+
+    /**
+     * 路径匹配器
+     */
+    private AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     /**
      * 设置资源ID
@@ -121,8 +130,16 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
 
         configAttributes.addAll(clientAccessScopeResourceAddressMapping.keySet()
                 .stream()
-                .filter(clientAccessScopeName ->
-                        StringUtils.equals(MapUtils.getString(clientAccessScopeResourceAddressMapping, clientAccessScopeName), resourceAddress)
+                .filter(clientAccessScopeName -> {
+                            // ACCESS_RESOURCE（redis里面map的key）
+                            log.debug("clientAccessScopeName:{}", clientAccessScopeName);
+                            // /resource/access@resource-server（redis里面map的value）
+                            log.debug("MapUtils:{}", MapUtils.getString(clientAccessScopeResourceAddressMapping, clientAccessScopeName));
+                            // /resource/access@resource-server
+                            log.debug("resourceAddress:{}", resourceAddress);
+
+                            return this.checkAccessPermissions(MapUtils.getString(clientAccessScopeResourceAddressMapping, clientAccessScopeName), resourceAddress);
+                        }
                 )
                 // client-access-scope@ACCESS_RESOURCE
                 .map(clientAccessScopeName -> new SecurityConfig(StringUtils.join(Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_ACCESS_SCOPE.getKey(), clientAccessScopeName)))
@@ -141,7 +158,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         configAttributes.addAll(clientAuthorityResourceAddressMapping.keySet()
                 .stream()
                 .filter(clientAuthorityName ->
-                        StringUtils.equals(MapUtils.getString(clientAuthorityResourceAddressMapping, clientAuthorityName), resourceAddress)
+                        this.checkAccessPermissions(MapUtils.getString(clientAuthorityResourceAddressMapping, clientAuthorityName), resourceAddress)
                 )
                 .map(clientAuthorityName -> new SecurityConfig(StringUtils.join(Oauth2RedisKey.CONFIG_ATTR_PREFIX_CLIENT_AUTHORITY.getKey(), clientAuthorityName)))
                 .collect(Collectors.toSet())
@@ -159,11 +176,33 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
         configAttributes.addAll(userAuthorityResourceAddressMapping.keySet()
                 .stream()
                 .filter(userAuthorityName ->
-                        StringUtils.equals(MapUtils.getString(userAuthorityResourceAddressMapping, userAuthorityName), resourceAddress)
+                        this.checkAccessPermissions(MapUtils.getString(userAuthorityResourceAddressMapping, userAuthorityName), resourceAddress)
                 )
                 .map(userAuthorityName -> new SecurityConfig(StringUtils.join(Oauth2RedisKey.CONFIG_ATTR_PREFIX_USER_AUTHORITY.getKey(), userAuthorityName)))
                 .collect(Collectors.toSet())
         );
+    }
+
+    /**
+     * 检查访问权限
+     *
+     * @param permissions     权限： /resource/access@resource-server
+     * @param resourceAddress 访问地址： /resource/access@resource-server
+     * @return 权限结果
+     */
+    private boolean checkAccessPermissions(String permissions, String resourceAddress) {
+        if (StringUtils.isBlank(permissions) || StringUtils.isBlank(resourceAddress)) {
+            return false;
+        }
+        //redis缓存权限
+        String[] permissionsArr = permissions.split(Oauth2RedisKey.AT.getKey());
+        String permissionUrl = permissionsArr[0];
+        String permissionResource = permissionsArr[1];
+        //访问路径
+        String[] resourceAddressArr = resourceAddress.split(Oauth2RedisKey.AT.getKey());
+        String addressUrl = resourceAddressArr[0];
+        String addressResource = resourceAddressArr[1];
+        return StringUtils.equals(permissionResource, addressResource) && this.antPathMatcher.match(permissionUrl, addressUrl);
     }
 
     /*public static void main(String[] args) {
