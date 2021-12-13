@@ -1,0 +1,18 @@
+security-matchers:
+  list:
+    # 首页和登录
+    - /
+    - /login
+    # swagger
+    - swagger-ui.html
+    - /swagger-ui.html/**
+    - /swagger-resources/**
+    - /v2/**
+    - /webjars/**
+    # 验证码
+    - /captcha.jpg**
+    # 查看SQL监控（druid）
+    - /druid/**
+    - /favicon.ico
+    # 对外开放接口
+    - /**

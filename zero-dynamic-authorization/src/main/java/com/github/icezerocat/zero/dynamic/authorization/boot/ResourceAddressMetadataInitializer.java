@@ -40,6 +40,13 @@ public class ResourceAddressMetadataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        this.initAddressMetadata();
+    }
+
+    /**
+     * 初始化地址元数据
+     */
+    public void initAddressMetadata() {
         log.info("Resource address metadata initializing ...");
         // 初始化客户端访问范围
         this.initClientAccessScope();

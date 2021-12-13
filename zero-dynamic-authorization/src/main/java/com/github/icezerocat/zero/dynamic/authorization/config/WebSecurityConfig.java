@@ -35,6 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource(name = "usernamePasswordAuthenticationProvider")
     private AuthenticationProvider authenticationProvider;
 
+    @Resource
+    private SecurityProperties securityProperties;
+
     /**
      * 认证管理器：防止无法自动注入 and 如果不配置SpringBoot会自动配置一个AuthenticationManager,覆盖掉内存中的用户
      * {@link org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#authenticationManagerBean()}
@@ -67,9 +70,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // ~ 为客户端，JWT-token
         http.csrf().disable();
         // ~ Authorization Code Grant 和 Implicit Grant 需要开启表单登陆, 设置默认页面登陆过滤器
-        http.formLogin().and().addFilter(this.defaultLoginPageGeneratingFilter());
+        http.formLogin().and().addFilter(this.defaultLoginPageGeneratingFilter())
+                .headers().frameOptions().disable();
         // ~ 禁用 Authorization: Basic xxx
         http.httpBasic().disable();
+        // 放行的请求
+        String[] antMatchers = this.securityProperties.getList().toArray(new String[0]);
+        http.authorizeRequests().antMatchers(antMatchers).permitAll();
         // 其它的请求要求必须有身份认证
         http.authorizeRequests().anyRequest().authenticated();
     }

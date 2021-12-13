@@ -4,6 +4,7 @@ logging:
 spring:
   profiles:
     include: redis
+    active: security
   application:
     name: dynamic-authorization
   datasource:
