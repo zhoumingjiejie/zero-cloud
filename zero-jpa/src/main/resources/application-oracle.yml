@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@127.0.0.1:1521:ORCL
+#    url: jdbc:oracle:thin:@192.168.0.63:15211:ORA11G
+#    url: jdbc:oracle:thin:@127.0.0.1:8088:ORA11G
+#    url: jdbc:oracle:thin:@127.0.0.1:8089:ORA11G
+#    url: jdbc:oracle:thin:@(description=(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 127.0.0.1)(PORT = 8088))(load_balance=yes)(failover=yes))(connect_data=(service_name= ORA11G)(instance_name=ORA11G)))
+    username: ZHFW
+    password: 123456

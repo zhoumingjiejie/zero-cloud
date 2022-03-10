@@ -1,5 +1,9 @@
+server:
+  port: 9090
 logging:
   level:
     com:
       github:
         icezerocat: debug
+  file:
+    name: ./logs/@project.artifactId@/debug.log

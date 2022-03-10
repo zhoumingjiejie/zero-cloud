@@ -1,0 +1,11 @@
+spring:
+  security:
+    user:
+      name: root
+      password: root
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: test-secret

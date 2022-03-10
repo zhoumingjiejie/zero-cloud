@@ -38,11 +38,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .inMemoryAuthentication()
                 .withUser("user").password(this.passwordEncoder().encode("user")).roles("USER")
                 .and()
-                .withUser("test").password(this.passwordEncoder().encode("test")).roles("TEST");
+                .withUser("test").password(this.passwordEncoder().encode("test")).roles("TEST")
+                .and()
+                .withUser("nicky").password("{noop}123").roles("admin");
     }
 
     /**
      * （登录页设置），（匿名用户放行，动态权限拦截，受保护请求）
+     *
      * @param http Http安全
      * @throws Exception 异常
      */
@@ -51,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin() //登记界面，默认是permit All
                 .and()
                 //不用身份认证可以访问
-                .authorizeRequests().antMatchers("/", "/home").permitAll()
+                .authorizeRequests().antMatchers("/", "/home", "/oauth/**").permitAll()
                 .and()
                 //其它的请求要求必须有身份认证
                 .authorizeRequests().anyRequest().authenticated()

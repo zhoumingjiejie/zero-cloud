@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Description: 用户
@@ -37,4 +38,9 @@ public class User implements Serializable {
      */
     @Valid
     private UserInfo userInfo;
+
+    /**
+     * 数组用户
+     */
+    private List<UserInfo> userInfos;
 }

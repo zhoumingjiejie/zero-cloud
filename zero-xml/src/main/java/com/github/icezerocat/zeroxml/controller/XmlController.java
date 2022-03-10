@@ -9,20 +9,23 @@ import github.com.icezerocat.component.common.utils.Dom4jUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.xml.sax.InputSource;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
+import javax.xml.XMLConstants;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -53,6 +56,10 @@ public class XmlController {
         Document document = Dom4jUtil.getDocument("data.xml");
         log.debug("报文：{}\t{}", document, Dom4jUtil.documentToString(document, "UTF-8"));
         List<Element> childElements = Dom4jUtil.getChildElements(document.getRootElement());
+        Element toElement = Dom4jUtil.getChildElement(document.getRootElement(), "to");
+        toElement.setText("\\<![CDATA[[\"520423199012142819\"]]]>");
+        log.debug("to标签变更：{}", Dom4jUtil.documentToString(document, "GB23121"));
+        log.debug("to标签变更：{}", document.asXML());
         if (!CollectionUtils.isEmpty(childElements)) {
             childElements.forEach(o -> {
                 //TODO 问题1： http:进去、接收、返回； webService：进去报文格式要求、接收到什么格式解析、确认返回数据的要求
@@ -159,5 +166,51 @@ public class XmlController {
         xStream.addPermission(AnyTypePermission.ANY);
         xStream.autodetectAnnotations(true);
         return xStream;
+    }
+
+    /**
+     * 使用最原始的javax.xml.parsers，标准的jdk api;XML转字符串
+     *
+     * @param document DOCUMENT为org.w3c.dom.Document
+     * @return 字符串
+     * @throws TransformerException 变压器异常
+     */
+    private String jdkApiXmlToStr(org.w3c.dom.Document document) throws TransformerException {
+        //XML转字符串
+        TransformerFactory tf = TransformerFactory.newInstance();
+        tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        Transformer t = tf.newTransformer();
+        t.setOutputProperty("encoding", "GB23121");//解决中文问题，试过用GBK不行
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        t.transform(new DOMSource(document), new StreamResult(bos));
+        return bos.toString();
+    }
+
+    /**
+     * 使用dom4j XML转字符串
+     *
+     * @param document DOCUMENT为org.dom4j.Document
+     * @return 字符串
+     */
+    private String dom4jXmlToStr(Document document) {
+        return document.asXML();
+    }
+
+    /**
+     * JDOM的处理方式和第一种方法处理非常类似;XML转字符串
+     *
+     * @param document DOCUMENT为org.jdom.Document
+     * @return 字符串
+     * @throws IOException io异常
+     */
+    private String jdomXmlToStr(org.jdom2.Document document) throws IOException {
+        //XML转字符串
+        Format format = Format.getPrettyFormat();
+        format.setEncoding("gb2312");//设置xml文件的字符为gb2312，解决中文问题
+        XMLOutputter xmlout = new XMLOutputter(format);
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        xmlout.output(document, bo);
+        return bo.toString();
     }
 }

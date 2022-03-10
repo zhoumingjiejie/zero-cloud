@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service>
+    <head>
+        <channel_id>qlhzhswdtClient</channel_id>
+        <password>qlhzhswdt#2021</password>
+        <tran_id>GS.CX.WSCX.NSRXX.NSRWFWJXX</tran_id>
+    </head>
+    <body><![CDATA[[${nsrsbh}]]]></body>
+</service>

@@ -42,14 +42,60 @@
             <version>1.4.18</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+
+        <!--    httpClient  -->
+        <dependency>
+            <groupId>com.arronlong</groupId>
+            <artifactId>httpclientutil</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+
+        <!--retrofit-->
+        <dependency>
+            <groupId>com.github.lianjiatech</groupId>
+            <artifactId>retrofit-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+
+        <!--swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>1.9.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <mainClass>
+                        com.github.icezerocat.zeroxml.ZeroXmlApplication
+                    </mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

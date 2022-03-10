@@ -26,4 +26,9 @@ class UserInfo implements Serializable {
      */
     @NotBlank(message = "邮箱不能为空")
     private String email;
+
+    /**
+     * 手机号码
+     */
+    private String phone;
 }

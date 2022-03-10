@@ -45,7 +45,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 //允许所有资源服务器访问公钥端点（/oauth/token_key）
                 .tokenKeyAccess("permitAll()")
                 //只允许验证用户访问令牌解析端点（/oauth/check_token）
-                .checkTokenAccess("isAuthenticated()")
+                //.checkTokenAccess("isAuthenticated()")
+                .checkTokenAccess("permitAll()")
                 // 允许客户端发送表单来进行权限认证来获取令牌
                 .allowFormAuthenticationForClients();
     }

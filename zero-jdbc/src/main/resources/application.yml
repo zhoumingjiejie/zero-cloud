@@ -1,0 +1,21 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1/qas_r_guide?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+logging:
+  level:
+    com.github.icezerocat: debug
+    org:
+      springframework:
+        jdbc:
+          core: debug
+    java:
+      sql:
+        Statement: debug
+  file:
+    name: logs/@project.artifactId@/debug.log

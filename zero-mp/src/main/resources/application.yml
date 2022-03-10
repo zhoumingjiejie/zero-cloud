@@ -1,0 +1,18 @@
+server:
+  port: 9999
+spring:
+  datasource:
+    druid:
+      driver-class-name: oracle.jdbc.OracleDriver
+      url: jdbc:oracle:thin:@192.168.0.11:1521:ORA11G
+      username: QAS_R_GD
+      password: raymon
+      validation-query: select 1 from dual
+logging:
+  level:
+    com.github.icezerocat: debug
+    github:
+      com:
+        icezerocat: debug
+  file:
+    name: ./logs/@project.artifactId@/debug.log

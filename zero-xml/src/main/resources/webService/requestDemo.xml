@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service  xmlns="http://www.chinatax.gov.cn/spec/">
+    <head>
+        <tran_id>DZSWJ.ZHGLXT.XXFW.TYTX.QUERY</tran_id>
+        <!--平台为接入渠道统一分配的标识(ID)，例如：ZJJG_001-->
+        <channel_id>DZSJKHD</channel_id>
+        <tran_seq>725E5F32F71C0F1DCBBE6463B54F1BE8</tran_seq>
+        <tran_date>20210915</tran_date>
+        <tran_time>171856348</tran_time>
+        <expand>
+            <name>identityType</name>
+            <value>DZSJKHD</value>
+        </expand>
+        <expand>
+            <name>sjry</name>
+            <value>94406820031</value>
+        </expand>
+        <expand>
+            <name>sjjg</name>
+            <value>14400000000</value>
+        </expand>
+        <expand>
+            <name>SERVICENAME</name>
+            <value>DZSWJ.ZHGLXT.XXFW.TYTX.QUERY</value>
+        </expand>
+    </head>
+    <!--ywcs:业务参数-->
+    <body>
+        <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+        <taxML  xsi:type="" xmlbh="" bbh="1.0" xmlmc="DZSWJ.ZHGLXT.XXFW.TYTX.QUERY" xsi:schemaLocation="http://www.chinatax.gov.cn/dataspec" xmlns="http://www.chinatax.gov.cn/dataspec/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <XXFW00321ReqGrid>
+                <XXFW00321ReqLB>
+                    <ywcs>{djxh:"10214406000000003512"}</ywcs>
+                    <gzbm>00010001</gzbm>
+                </XXFW00321ReqLB>
+            </XXFW00321ReqGrid>
+        </taxML>]]>
+    </body>
+</service>
