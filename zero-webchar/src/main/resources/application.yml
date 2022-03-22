@@ -10,6 +10,7 @@ logging:
     name: ./logs/@project.artifactId@/info.log
 
 wx:
+  #公众号配置
   mp:
     useRedis: false
     redisConfig:
@@ -21,11 +22,16 @@ wx:
       #        token: icezerocat # 接口配置里的Token值
       #        aesKey: oNQ5jhzh3cjQckN4lJttPlZ43ZJ9aDkB59BR3hta1Pp # 接口配置里的EncodingAESKey值
       #夏令营报名中心
-      - appId: wx829a59173aba7208 # 第一个公众号的appid
-        secret: 52880ef80c15549aa21d72f352e4e83f # 公众号的appsecret
-        token: WLvGnmjQr5BrMzaqaGAl4nd95Qv5aaNc # 接口配置里的Token值
-        aesKey: b3h4PfZHa46Bk3HFB0fZ4qAZP03Z3POaZO0H8B4P3g0 # 接口配置里的EncodingAESKey值
-
+#      - appId: wx829a59173aba7208 # 第一个公众号的appid
+#        secret: 52880ef80c15549aa21d72f352e4e83f # 公众号的appsecret
+#        token: WLvGnmjQr5BrMzaqaGAl4nd95Qv5aaNc # 接口配置里的Token值
+#        aesKey: b3h4PfZHa46Bk3HFB0fZ4qAZP03Z3POaZO0H8B4P3g0 # 接口配置里的EncodingAESKey值
+      #吉林税务-吉税办征纳互动
+      - appId: wx8ba0b94303bbf0ca # 第一个公众号的appid
+        secret: 70120a5f932aaaab9912c2235a26e456 # 公众号的appsecret
+        token: WLvGnmjQr5BrMzaqaGAl4nd95Qv5aaNB # 接口配置里的Token值
+        aesKey: dQH9QlDdLzLGQ2tebYh7ORqr00MkL6T1zGxCoIEduad # 接口配置里的EncodingAESKey值
+  #小程序配置
   miniapp:
     configs:
       - appid: #微信小程序的appid
