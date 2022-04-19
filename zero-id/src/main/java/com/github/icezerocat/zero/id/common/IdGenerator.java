@@ -29,7 +29,6 @@ public class IdGenerator {
         if (this.lastId < this.nextId) {
             this.getNewBlock();
         }
-
         return this.nextId++;
     }
 

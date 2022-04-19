@@ -1,16 +1,15 @@
 package com.github.icezerocat.zero.id.web.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.icezerocat.zero.id.model.IdBlock;
-import github.com.icezerocat.jdbctemplate.service.BaseJdbcTemplate;
+import com.github.icezerocat.zero.id.service.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Description: 序列号控制器
@@ -25,15 +24,26 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SerialNumberController {
 
-    final private BaseJdbcTemplate baseJdbcTemplate;
+    final private IdGeneratorService idGeneratorService;
 
     @GetMapping("say")
     public String say() {
-        List<Map<String, Object>> mapList = this.baseJdbcTemplate.queryForList("select * from t_guide_catalog");
-        log.debug("{}", mapList);
-        IdBlock idBlock = new IdBlock("zero");
-        int[] insert = this.baseJdbcTemplate.insert(idBlock);
-        log.debug("返回值：{}=====>{}", insert, idBlock);
-        return JSONObject.toJSONString(mapList);
+        ExecutorService executorService = Executors.newFixedThreadPool(500);
+        log.debug("线程池创建：{}", executorService);
+        IdBlock idBlocka = this.idGeneratorService.doGetNextIdBlock();
+        log.debug("{}——{}", Thread.currentThread().getName(), idBlocka);
+        for (int i = 0; i < 800; i++) {
+            executorService.submit(() -> {
+                IdBlock idBlock = this.idGeneratorService.doGetNextIdBlock();
+                log.warn("{}——{}", Thread.currentThread().getName(), idBlock);
+            });
+        }
+        for (int i = 0; i < 800; i++) {
+            executorService.submit(() -> {
+                IdBlock idBlock = this.idGeneratorService.doGetNextIdBlock("zero", "zero");
+                log.warn("{}——{}", Thread.currentThread().getName(), idBlock);
+            });
+        }
+        return "say";
     }
 }

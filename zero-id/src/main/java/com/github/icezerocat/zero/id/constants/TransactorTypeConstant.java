@@ -1,6 +1,7 @@
 package com.github.icezerocat.zero.id.constants;
 
 /**
+ * 档案事务类型（暂未使用）
  * Created by zmj on 2018/8/28.
  */
 public enum TransactorTypeConstant {

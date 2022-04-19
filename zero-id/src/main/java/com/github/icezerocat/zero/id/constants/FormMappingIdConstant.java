@@ -1,6 +1,8 @@
 package com.github.icezerocat.zero.id.constants;
 
 /**
+ * 档案apForm常量（暂未使用）
+ *
  * Created by zmj on 2018/8/23.
  */
 public class FormMappingIdConstant {

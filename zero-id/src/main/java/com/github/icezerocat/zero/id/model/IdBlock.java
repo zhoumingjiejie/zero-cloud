@@ -1,5 +1,6 @@
 package com.github.icezerocat.zero.id.model;
 
+import github.com.icezerocat.jdbctemplate.annotations.TableId;
 import github.com.icezerocat.jdbctemplate.annotations.TableName;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class IdBlock implements Serializable {
     /**
      * 主键
      */
+    @TableId
     private Long id;
     /**
      * idName可表示某一天，groupName可表示某一时间段（利于数据统计）

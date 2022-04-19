@@ -3,7 +3,7 @@ package com.github.icezerocat.zero.id.entity;
 import java.io.Serializable;
 
 /**
- * Description: 系统序列号
+ * Description: 系统序列号（暂未使用）
  * CreateDate:  2021/11/30 12:01
  *
  * @author zero

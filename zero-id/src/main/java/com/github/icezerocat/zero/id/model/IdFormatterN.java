@@ -3,7 +3,7 @@ package com.github.icezerocat.zero.id.model;
 import java.text.DecimalFormat;
 
 /**
- * Description: id格式器
+ * Description: id长度格式器
  * CreateDate:  2021/11/30 14:45
  *
  * @author zero

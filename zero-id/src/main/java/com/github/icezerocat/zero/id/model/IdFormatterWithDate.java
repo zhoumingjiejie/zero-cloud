@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Description: TODO
+ * Description: 带日期的 ID 格式化程序
  * CreateDate:  2021/11/30 14:54
  *
  * @author zero

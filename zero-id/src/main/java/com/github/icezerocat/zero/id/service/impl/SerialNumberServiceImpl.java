@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Description: TODO
+ * Description: 第三方序列号服务实现，参考缓存方案（暂未使用）
  * CreateDate:  2021/11/30 12:11
  *
  * @author zero

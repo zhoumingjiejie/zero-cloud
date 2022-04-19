@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * Description: TODO
+ * Description: 档案编号解析规则（暂未使用）
  * CreateDate:  2021/11/30 14:59
  *
  * @author zero
