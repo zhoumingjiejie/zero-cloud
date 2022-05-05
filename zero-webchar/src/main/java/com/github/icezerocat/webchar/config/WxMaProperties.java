@@ -3,6 +3,7 @@ package com.github.icezerocat.webchar.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "wx.miniapp")
 public class WxMaProperties {
 
-    private List<Config> configs;
+    private List<Config> configs = new ArrayList<>();
 
     @Data
     public static class Config {

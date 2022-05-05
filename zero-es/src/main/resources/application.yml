@@ -1,0 +1,19 @@
+logging:
+  level:
+    com:
+      github:
+        icezerocat: debug
+    org:
+      springframework:
+        data:
+          elasticsearch:
+            core: debug
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    username: zhfw
+    password: 123456
+  elasticsearch:
+    uris:
+      - http://localhost:9200
