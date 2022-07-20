@@ -1,0 +1,37 @@
+# springboot项目使用
+yfwjcpt-sdk:
+  enabled: true
+  url: "http://127.0.0.1:8080/"
+  # 本应用id,在云服务集成平台获取
+  app: 123
+  # 本应用接入网关令牌,在云服务集成平台获取
+  token: 888888
+  # 本应用部署所在税务机关代码
+  swjgdm: 14400000000
+  # 本应用是否在内网,默认true,dmz时请配置为false
+  nw: false
+  # 以下为连接池信息,可选,下列为不配置参数时的默认值
+  conn:
+    # 连接池内连接最大空闲时间,单位:秒,默认60
+    maxIdleTime: 60
+    socket:
+      tcpNoDelay: true
+      soReuseAddress: true
+      soKeepAlive: true
+      # 支持backlogSize,rcvBufSize,sndBufSize,soLinger,soTimeout
+    pool:
+      maxTotal: 1024
+      defaultMaxPerRoute: 1024
+    request:
+      connectTimeout: 10000
+      connectionRequestTimeout: 10000
+  feign:
+    # 电票内网应用在DMZ网关的接入地址。格式：网关地址/ebus/swjgdm_nw/appId
+    # http://yfwjcpt.ltgd.tax.cn/ebus/14400000000_nw/14400000000_nw_dppt-sc-app-id
+    # url: http://ywkfcs.jcsj.tax.cn/ebus/14400000000_NW/14400000000_nw_gt4-znhd-znhd-service/SWZJ_GT4_GGZNHD_ZNHD_QUERYALLZNHDDATTA
+    url: http://127.0.0.1:8080
+
+logging:
+  level:
+    com.github.icezerocat: debug
+    cn.gov.chinatax: debug

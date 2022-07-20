@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    consul:
+      config:
+        # 对应配置文件格式
+        data-key: ${spring.application.name}
+        # 环境分隔符，默认","
+        profile-separator: '-'
+        format: YAML
+  application:
+    name: zero-tsf
+  profiles:
+    active: dev
+logging:
+  level:
+    com.github.icezerocat: debug
+    com:
+      github:
+        icezerocat: debug
